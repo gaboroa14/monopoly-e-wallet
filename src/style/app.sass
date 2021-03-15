@@ -1,0 +1,34 @@
+@charset "utf-8"
+
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,700')
+
+@font-face 
+   font-family: 'Monopoly'
+   src: url("fonts/Monopoly Bold.ttf") format("truetype")
+
+
+// Set your brand colors
+$brown: #B85B28
+$green: #71945B
+$red: #7E0000
+$white: #ECECEC
+
+// Update Bulma's global variables
+$family-sans-serif: 'Monopoly', sans-serif
+$primary: $brown
+$is-danger: $red
+$link: $green
+$widescreen-enabled: false
+$fullhd-enabled: false
+$text: $white
+
+// Update some of Bulma's component variables
+$body-background-color: $red
+$control-border-width: 2px
+$input-border-color: transparent
+$input-shadow: none
+
+// Import only what you need from Bulma
+
+@import '../../node_modules/bulma/bulma.sass'
