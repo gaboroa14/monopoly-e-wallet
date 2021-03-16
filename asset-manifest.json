@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/monopoly-e-wallet/static/css/main.fca7f402.chunk.css",
+    "main.js": "/monopoly-e-wallet/static/js/main.de8103ba.chunk.js",
+    "main.js.map": "/monopoly-e-wallet/static/js/main.de8103ba.chunk.js.map",
+    "runtime-main.js": "/monopoly-e-wallet/static/js/runtime-main.d2d9a23e.js",
+    "runtime-main.js.map": "/monopoly-e-wallet/static/js/runtime-main.d2d9a23e.js.map",
+    "static/js/2.5ad7c7b1.chunk.js": "/monopoly-e-wallet/static/js/2.5ad7c7b1.chunk.js",
+    "static/js/2.5ad7c7b1.chunk.js.map": "/monopoly-e-wallet/static/js/2.5ad7c7b1.chunk.js.map",
+    "static/js/3.880d5cf0.chunk.js": "/monopoly-e-wallet/static/js/3.880d5cf0.chunk.js",
+    "static/js/3.880d5cf0.chunk.js.map": "/monopoly-e-wallet/static/js/3.880d5cf0.chunk.js.map",
+    "index.html": "/monopoly-e-wallet/index.html",
+    "static/css/main.fca7f402.chunk.css.map": "/monopoly-e-wallet/static/css/main.fca7f402.chunk.css.map",
+    "static/js/2.5ad7c7b1.chunk.js.LICENSE.txt": "/monopoly-e-wallet/static/js/2.5ad7c7b1.chunk.js.LICENSE.txt",
+    "static/media/app.css": "/monopoly-e-wallet/static/media/Monopoly Bold.de403097.ttf",
+    "static/media/kuro.cbe4521a.png": "/monopoly-e-wallet/static/media/kuro.cbe4521a.png",
+    "static/media/logo.35edb2b5.png": "/monopoly-e-wallet/static/media/logo.35edb2b5.png",
+    "static/media/marvel.568d8c62.png": "/monopoly-e-wallet/static/media/marvel.568d8c62.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d2d9a23e.js",
+    "static/js/2.5ad7c7b1.chunk.js",
+    "static/css/main.fca7f402.chunk.css",
+    "static/js/main.de8103ba.chunk.js"
+  ]
+}
