@@ -23,7 +23,7 @@ const Index = () => {
     }
 
     return (
-        <section className="section is-centered">
+        <section className="section is-centered has-background-danger">
             <div className="container">
                 <Logo/>
                 <PlayerName/>
