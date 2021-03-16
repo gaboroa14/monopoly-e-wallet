@@ -14,10 +14,10 @@ const Index = () => {
 
     const handleJoinClick = () => {
         Swal.fire({
+            title: 'Introduzca el código de la sala: ',
             input: 'text',
             inputAttributes:{
-                readonly: 'true',
-                placeholder: 'ldkj',
+                value: 'ldkj',
             },
         });
     }
