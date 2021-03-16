@@ -25,7 +25,7 @@ const Index = () => {
     return (
         <section className="section is-centered has-background-danger">
             <div className="container">
-                <Logo/>
+                <Logo mb="6"/>
                 <PlayerName/>
                 <div className="buttons is-centered mt-6 mb-6">
                     <Button

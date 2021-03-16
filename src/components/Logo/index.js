@@ -1,9 +1,9 @@
 import logo from "./logo.png";
 
-const Logo = () => {
+const Logo = ({mb}) => {
     return(
-    <figure className="image container mb-6 has-ratio" width="400">
-        <img src={logo}/>
+    <figure className={`image container mb-${mb} has-ratio`} width="400">
+        <img alt="Logo de Monopoly" src={logo}/>
     </figure>);
 }
 
