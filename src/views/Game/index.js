@@ -1,19 +1,25 @@
 import Logo from "../../components/Logo";
 import Player from "../../components/Player";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Game = () => {
+  const showCurrentAmount = () => {
+    Swal.fire("Su saldo es 2.000");
+  }
+
   return (
     <section className="section is-centered">
       <div className="container">
         <Logo />
         <div className="columns is-mobile is-centered has-text-centered mt-1">
           <div className="column is-6">
-            <Player
-              playerName="GABOX"
-              token="http://placekitten.com/128/128"
-              amount="2.000"
-              action={() => {}}
-            />
+              <Player
+                playerName="GABOX"
+                token="http://placekitten.com/128/128"
+                amount="2.000"
+                action={showCurrentAmount}
+              />
           </div>
           <div className="column is-6">
             <Player
@@ -44,12 +50,9 @@ const Game = () => {
         </div>
         <div className="columns is-mobile is-half is-centered has-text-centered">
           <div className="column is-12">
-            <div className="box has-text-danger">
-                chao cheo
-            </div>
+            <div className="box has-text-danger">chao cheo</div>
           </div>
         </div>
-
       </div>
     </section>
   );
