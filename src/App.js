@@ -4,9 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
-
+import Game from './views/Game';
 
 function App() {
   return (
@@ -15,8 +14,8 @@ function App() {
         <Route path="/" exact>
           <Index/>
         </Route>
-        <Route path="" exact>
-          
+        <Route path="/game/" exact>
+          <Game/>
         </Route>
       </Switch>
     </Router>

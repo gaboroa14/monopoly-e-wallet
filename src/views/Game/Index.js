@@ -1,13 +1,13 @@
-import Logo from "../../Components/Logo";
+import Logo from "../../components/Logo";
 
-const Index = () =>{
+const Game = () =>{
     return(
         <section className="section is-centered">
-            <Div className="container">
-            <Logo/>
-            </Div>
+            <div className="container">
+                <Logo/>
+            </div>
         </section>
     )
 }
 
-export default Index;
+export default Game;
