@@ -16,16 +16,18 @@ const BottomButtons = ({ leftButton, rightButton }) => {
           </Link>
         </div>
       </div>
-      <div className="level-item">
-        <div className="level-right">
-          <Button
-            text={rightButton.text}
-            color="link"
-            size="large"
-            action={() => rightButton.action}
-          />
+      {rightButton ? (
+        <div className="level-item">
+          <div className="level-right">
+            <Button
+              text={rightButton.text}
+              color="link"
+              size="large"
+              action={rightButton.action}
+            />
+          </div>
         </div>
-      </div>
+      ) : undefined}
     </div>
   );
 };
