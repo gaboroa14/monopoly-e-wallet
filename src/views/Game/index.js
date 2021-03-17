@@ -1,56 +1,60 @@
 import Logo from "../../components/Logo";
-import Player from "../../components/Player";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useHistory, Link } from "react-router-dom";
+import PlayerGroup from "../../components/PlayerGroup";
 
 const Game = () => {
+  let history = useHistory();
+
   const showCurrentAmount = () => {
-    Swal.fire("Su saldo es 2.000");
-  }
+    Swal.fire({
+      title: "Su saldo es ₩1.000",
+      confirmButtonColor: "#71945B",
+      confirmButtonText: "Aceptar",
+    });
+  };
+
+  const handleSendingMoney = () => {
+    history.push("/send");
+  };
+
+  const players = [
+    {
+      playerName: "GABOX",
+      token: "http://placekitten.com/128/128",
+      amount: "1000",
+      action: showCurrentAmount,
+    },
+    {
+      playerName: "ANYI",
+      token: "http://placekitten.com/128/129",
+      amount: "~2000",
+      action: handleSendingMoney,
+    },
+    {
+      playerName: "AJAV06",
+      token: "http://placekitten.com/129/128",
+      amount: "~1000",
+      action: handleSendingMoney,
+    },
+    {
+      playerName: "JONABB",
+      token: "http://placekitten.com/127/128",
+      amount: "~2000",
+      action: handleSendingMoney,
+    },
+  ];
 
   return (
     <section className="section is-centered">
       <div className="container">
         <Logo />
-        <div className="columns is-mobile is-centered has-text-centered mt-1">
-          <div className="column is-6">
-              <Player
-                playerName="GABOX"
-                token="http://placekitten.com/128/128"
-                amount="2.000"
-                action={showCurrentAmount}
-              />
-          </div>
-          <div className="column is-6">
-            <Player
-              playerName="ANYI"
-              token="http://placekitten.com/128/128"
-              amount="~2.000"
-              action={() => {}}
-            />
-          </div>
-        </div>
-        <div className="columns is-mobile is-half is-centered has-text-centered">
-          <div className="column is-6">
-            <Player
-              playerName="AJAV06"
-              token="http://placekitten.com/128/128"
-              amount="~2.000"
-              action={() => {}}
-            />
-          </div>
-          <div className="column is-6">
-            <Player
-              playerName="JONABB"
-              token="http://placekitten.com/128/128"
-              amount="~2.000"
-              action={() => {}}
-            />
-          </div>
-        </div>
+        <PlayerGroup players={players} />
         <div className="columns is-mobile is-half is-centered has-text-centered">
           <div className="column is-12">
-            <div className="box has-text-danger">chao cheo</div>
+            <Link to="/bankrupt/">
+              <div className="box has-text-danger">chao cheo</div>
+            </Link>
           </div>
         </div>
       </div>
