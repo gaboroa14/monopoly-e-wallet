@@ -91,41 +91,43 @@ const SendMoney = ({ user, saldoActual }) => {
   };
 
   const buttons = {
-    leftButton:{
-      link:"game",
-      text:"Atrás"
+    leftButton: {
+      link: "game",
+      text: "Atrás",
     },
-    rightButton:{
-      text:"Enviar",
-      action:handleSendPayment
-    }
-  }
+    rightButton: {
+      text: "Enviar",
+      action: handleSendPayment,
+    },
+  };
 
   return (
-    <div className="container">
-      <Logo mb="1" />
-      <div className="level is-mobile has-text-black">
-        <div className="level-item">
-          <div className="level-left">
-            <strong>Enviando a:</strong> {user}
+    <section className="section is-centered">
+      <div className="container">
+        <Logo mb="1" />
+        <div className="level is-mobile has-text-black">
+          <div className="level-item">
+            <div className="level-left">
+              <strong>Enviando a:</strong> {user}
+            </div>
+          </div>
+          <div className="level-item">
+            <div className="level-right">
+              <strong>Tu saldo es:</strong> ₩{saldoActual}
+            </div>
           </div>
         </div>
-        <div className="level-item">
-          <div className="level-right">
-            <strong>Tu saldo es:</strong> ₩{saldoActual}
+        <div className="columns is-mobile is-centered is-half mb-3">
+          <div className="column is-two-thirds">
+            <input className="input" value={`₩ ${monto}`} readOnly />
           </div>
         </div>
-      </div>
-      <div className="columns is-mobile is-centered is-half mb-3">
-        <div className="column is-two-thirds">
-          <input className="input" value={`₩ ${monto}`} readOnly />
-        </div>
-      </div>
 
-      <Keyboard onKeyPress={(e, n) => handleKeyPress(e, n)} />
+        <Keyboard onKeyPress={(e, n) => handleKeyPress(e, n)} />
 
-      <BottomButtons {...buttons}/>
-    </div>
+        <BottomButtons {...buttons} />
+      </div>
+    </section>
   );
 };
 

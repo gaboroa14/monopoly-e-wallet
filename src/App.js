@@ -10,6 +10,8 @@ import SendMoney from './views/SendMoney';
 import { ToastContainer } from 'react-toastify';
 import Bankrupt from './views/Bankrupt';
 import Bank from './views/Bank';
+import GameOver from './views/GameOver';
+import WinnerWinnerChickenDinner from './views/WinnerWinnerChickenDinner';
 
 function App() {
   return (
@@ -27,13 +29,18 @@ function App() {
         <Route path="/bankrupt/" exact>
           <Bankrupt/>
         </Route>
-        <Route path="/bank/" exact>s
+        <Route path="/bank/" exact>
           <Bank/>
+          </Route>
+        <Route path="/gameover/" exact>
+          <GameOver/>
+        </Route>
+        <Route path="/winner/" exact>
+          <WinnerWinnerChickenDinner/>
         </Route>
       </Switch>
       <ToastContainer />
     </Router>
   );
 }
-
 export default App;
