@@ -2,6 +2,7 @@ import Logo from "../../components/Logo";
 import Swal from "sweetalert2";
 import { useHistory, Link } from "react-router-dom";
 import PlayerGroup from "../../components/PlayerGroup";
+import BottomButtons from "../../components/BottomButtons";
 
 
 const Bank =()=>{
@@ -52,35 +53,40 @@ const Bank =()=>{
     {
       playerName: "ANYI",
       token: "http://placekitten.com/128/129",
-      amount: "~2000",
+      amount: "2000",
       action: showBankerOptions,
     },
     {
       playerName: "AJAV06",
       token: "http://placekitten.com/129/128",
-      amount: "~1000",
+      amount: "1000",
       action: showBankerOptions,
     },
     {
       playerName: "JONABB",
       token: "http://placekitten.com/127/128",
-      amount: "~2000",
+      amount: "2000",
       action: showBankerOptions,
     },
   ];
+
+  const buttons = {
+    leftButton: {
+        link:"game",
+        text:"Historial de Transacciones"
+    },
+    rightButton: {
+      link:"winner",
+      text:"Historial de Transacciones"
+  },
+    
+  };
     return (
         <section className="section is-centered">
             <div className="container">
                 <Logo />
                 <PlayerGroup players={players} />
-                <div className="columns is-mobile is-half is-centered has-text-centered">
-                    <div className="column is-12">
-                        <Link to="/bankrupt/">
-                            <div className="box has-text-danger">chao cheo</div>
-                            <div className="box has-text-danger">chao cheo</div>
-                        </Link>
-                    </div>
-                </div>
+                <BottomButtons {...buttons} />  
             </div>
         </section>
     )

@@ -19,12 +19,14 @@ const BottomButtons = ({ leftButton, rightButton }) => {
       {rightButton ? (
         <div className="level-item">
           <div className="level-right">
+          <Link to={`/${rightButton.link}/`}>
             <Button
               text={rightButton.text}
               color="link"
               size="large"
               action={rightButton.action}
             />
+          </Link>  
           </div>
         </div>
       ) : undefined}
