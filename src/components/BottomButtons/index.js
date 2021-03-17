@@ -4,14 +4,16 @@ const BottomButtons = ({ leftButton, rightButton }) => {
   return (
     <div className="level is-mobile has-text-black mt-4">
       <div className="level-item">
-        <div className="level-left">
+        {leftButton ? (
+          <div className="level-left">
             <Button
               text={leftButton.text}
               color="warning"
               size="large"
               action={leftButton.action}
             />
-        </div>
+          </div>
+        ) : undefined}
       </div>
       {rightButton ? (
         <div className="level-item">

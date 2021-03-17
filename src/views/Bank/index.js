@@ -90,19 +90,19 @@ const Bank = () => {
           cancelButtonText: "No",
           showCancelButton: true,
         }).then((result) => {
-          if (result.isConfirmed){
+          if (result.isConfirmed) {
             Swal.fire({
               title: "Partida finalizada con éxito",
               confirmButtonColor: "green",
-              confirmButtonText: "Aceptar"
+              confirmButtonText: "Aceptar",
             });
             history.push("/winner");
-          } else if (result.isDismissed){
+          } else if (result.isDismissed) {
             Swal.fire({
               title: "¡Han rechazado el fin del juego!",
               confirmButtonColor: "green",
-              confirmButtonText: "Aceptar"
-            })
+              confirmButtonText: "Aceptar",
+            });
           }
         });
       }

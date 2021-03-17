@@ -9,6 +9,7 @@ import Bank from "./views/Bank";
 import GameOver from "./views/GameOver";
 import WinnerWinnerChickenDinner from "./views/WinnerWinnerChickenDinner";
 import WithdrawMoney from "./views/WithdrawMoney";
+import History from "./views/History";
 
 function App() {
   return (
@@ -37,6 +38,9 @@ function App() {
         </Route>
         <Route path="/withdraw/:user" exact>
           <WithdrawMoney />
+        </Route>
+        <Route path="/history/" exact>
+          <History />
         </Route>
       </Switch>
       <ToastContainer />

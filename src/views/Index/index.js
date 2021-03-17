@@ -4,9 +4,18 @@ import PlayerName from "../../components/PlayerName";
 import Footer from "../../components/Footer";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
+import { useState } from "react";
 
 const Index = () => {
+  const [playerName, setPlayerName] = useState("");
   let history = useHistory();
+
+  const validateField = () => {
+    if (playerName===""){
+      Swal.fire("chacho marico mete un nombre");
+      return false;
+    } else return true;
+  }
 
   const handleCreateClick = () => {
     //Conectar con el backend para crear:
@@ -15,7 +24,7 @@ const Index = () => {
     // Debería retornar el código de la sala + el token.
 
     // Teóricamente el procedimiento de ingresar el token debería hacerse aquí.
-
+    if (!validateField()) return;
     Swal.fire({
       title: "El código de la sala es: AJSK2",
       text: "Esperando jugadores",
@@ -45,6 +54,7 @@ const Index = () => {
   };
 
   const handleJoinClick = () => {
+    if (!validateField()) return;
     Swal.fire({
       title: "Introduzca el código de la sala: ",
       input: "text",
@@ -84,7 +94,9 @@ const Index = () => {
     <section className="section is-centered has-background-danger">
       <div className="container">
         <Logo mb="6" />
-        <PlayerName />
+        <PlayerName 
+        name={playerName}
+        onTextChange={(e) => setPlayerName(e.target.value)}/>
         <div className="buttons is-centered mt-6 mb-6">
           <Button
             text="Crear"
