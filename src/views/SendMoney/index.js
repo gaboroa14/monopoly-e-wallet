@@ -2,14 +2,18 @@ import { useState } from "react";
 import Keyboard from "../../components/Keyboard";
 import Logo from "../../components/Logo";
 import BottomButtons from "../../components/BottomButtons";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
-const SendMoney = ({ user, saldoActual }) => {
+const SendMoney = () => {
   let history = useHistory();
+
+  const {user, bank} = useParams();
+
+  const saldoActual = "1.000";
 
   const [monto, setMonto] = useState("");
   const [hasComma, setHasComma] = useState(false);
@@ -61,7 +65,7 @@ const SendMoney = ({ user, saldoActual }) => {
     //4) Devuelve al menú principal
     if (monto.length !== 0) {
       Swal.fire({
-        title: `¿Enviarle ₩${monto} a GABOX?`,
+        title: `¿Enviarle ₩${monto} a ${user}?`,
         confirmButtonColor: "#71945B",
         cancelButtonColor: "#B85B28",
         confirmButtonText: "Sí",
@@ -70,11 +74,11 @@ const SendMoney = ({ user, saldoActual }) => {
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
-            title: `Enviaste ₩${monto} a GABOX`,
+            title: `Enviaste ₩${monto} a ${user}`,
             confirmButtonColor: "#71945B",
             confirmButtonText: "Aceptar",
           });
-          history.push("/game");
+          handleBackButtonClick();
         }
       });
     } else {
@@ -90,10 +94,12 @@ const SendMoney = ({ user, saldoActual }) => {
     }
   };
 
+  const handleBackButtonClick = () => history.push(bank ? "/bank" : "/game")
+
   const buttons = {
     leftButton: {
-      link: "game",
       text: "Atrás",
+      action: handleBackButtonClick
     },
     rightButton: {
       text: "Enviar",
@@ -108,18 +114,18 @@ const SendMoney = ({ user, saldoActual }) => {
         <div className="level is-mobile has-text-black">
           <div className="level-item">
             <div className="level-left">
-              <strong>Enviando a:</strong> {user}
+              <strong className="mr-2">Enviando a:</strong> {user}
             </div>
           </div>
           <div className="level-item">
             <div className="level-right">
-              <strong>Tu saldo es:</strong> ₩{saldoActual}
+              <strong className="mr-2">{bank ? `Saldo de ${user}:` : "Tu saldo es:"}</strong> ₩{saldoActual}
             </div>
           </div>
         </div>
         <div className="columns is-mobile is-centered is-half mb-3">
           <div className="column is-two-thirds">
-            <input className="input" value={`₩ ${monto}`} readOnly />
+            <input className="input is-size-2" value={`₩ ${monto}`} readOnly />
           </div>
         </div>
 

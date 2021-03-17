@@ -37,7 +37,7 @@ const Index = () => {
           if (result.isConfirmed) {
             //Conectar con el backend para crear la partida.
 
-            history.push("/game");
+            history.push("/bank");
           }
         });
       }

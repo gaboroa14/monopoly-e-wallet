@@ -22,7 +22,7 @@ const PlayerGroup = ({ players, winner }) => {
                 <Player {...value} />
               </div>
             );
-          else return undefined;
+          else return <div></div>;
         })}
       </div>
       <div className="columns is-mobile is-half is-centered has-text-centered">
@@ -44,7 +44,7 @@ const PlayerGroup = ({ players, winner }) => {
                 <Player {...value} />
               </div>
             );
-          else return undefined;
+          else return <div></div>;
         })}
       </div>
     </div>

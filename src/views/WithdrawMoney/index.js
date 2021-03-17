@@ -2,18 +2,21 @@ import { useState } from "react";
 import Keyboard from "../../components/Keyboard";
 import Logo from "../../components/Logo";
 import BottomButtons from "../../components/BottomButtons";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
-const WithdrawMoney = ({ user, saldoActual }) => {
+const WithdrawMoney = () => {
   let history = useHistory();
 
   const [monto, setMonto] = useState("");
   const [hasComma, setHasComma] = useState(false);
   const [afterComma, setAfterComma] = useState(0);
+
+  const {user} = useParams();
+  const saldoActual = "1.000";
 
   const appendNumberToInput = (number) => {
     const nvo_monto = `${monto}${number}`;
@@ -61,7 +64,7 @@ const WithdrawMoney = ({ user, saldoActual }) => {
     //4) Devuelve al menú principal
     if (monto.length !== 0) {
       Swal.fire({
-        title: `¿Cobrarle ₩${monto} a GABOX?`,
+        title: `¿Cobrarle ₩${monto} a ${user}?`,
         confirmButtonColor: "#71945B",
         cancelButtonColor: "#B85B28",
         confirmButtonText: "Sí",
@@ -70,11 +73,11 @@ const WithdrawMoney = ({ user, saldoActual }) => {
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
-            title: `Cobraste ₩${monto} a GABOX`,
+            title: `Cobraste ₩${monto} a ${user}`,
             confirmButtonColor: "#71945B",
             confirmButtonText: "Aceptar",
           });
-          history.push("/game");
+          history.push("/bank");
         }
       });
     } else {
@@ -90,10 +93,12 @@ const WithdrawMoney = ({ user, saldoActual }) => {
     }
   };
 
+  const handleBackButtonClick = () => history.push("/bank");
+
   const buttons = {
     leftButton: {
-      link: "bank",
       text: "Atrás",
+      action: handleBackButtonClick
     },
     rightButton: {
       text: "Cobrar",
@@ -108,18 +113,18 @@ const WithdrawMoney = ({ user, saldoActual }) => {
         <div className="level is-mobile has-text-black">
           <div className="level-item">
             <div className="level-left">
-              <strong>Cobrando a:</strong> {user}
+              <strong className="mr-2">Cobrando a:</strong> {user}
             </div>
           </div>
           <div className="level-item">
             <div className="level-right">
-              <strong>Saldo de </strong> {user} <strong>: </strong> ₩{saldoActual}
+              <strong className="mr-2">Saldo de {user}:</strong>  ₩{saldoActual}
             </div>
           </div>
         </div>
         <div className="columns is-mobile is-centered is-half mb-3">
           <div className="column is-two-thirds">
-            <input className="input" value={`₩ ${monto}`} readOnly />
+            <input className="input is-size-2 has-text-centered" value={`₩ ${monto}`} readOnly />
           </div>
         </div>
 

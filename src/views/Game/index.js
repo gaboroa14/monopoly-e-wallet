@@ -14,8 +14,8 @@ const Game = () => {
     });
   };
 
-  const handleSendingMoney = () => {
-    history.push("/send");
+  const handleSendingMoney = (user) => {
+    history.push(`/send/${user}`);
   };
 
   const players = [
@@ -29,19 +29,19 @@ const Game = () => {
       playerName: "ANYI",
       token: "http://placekitten.com/128/129",
       amount: "~2000",
-      action: handleSendingMoney,
+      action: () => handleSendingMoney("ANYI"),
     },
     {
       playerName: "AJAV06",
       token: "http://placekitten.com/129/128",
       amount: "~1000",
-      action: handleSendingMoney,
+      action: () => handleSendingMoney("AJAV06"),
     },
     {
       playerName: "JONABB",
       token: "http://placekitten.com/127/128",
       amount: "~2000",
-      action: handleSendingMoney,
+      action: () => handleSendingMoney("JONABB"),
     },
   ];
 

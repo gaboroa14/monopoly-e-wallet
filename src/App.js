@@ -1,46 +1,42 @@
-import Index from './views/Index';
+import Index from "./views/Index";
 import "./style/app.css";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
-import Game from './views/Game';
-import SendMoney from './views/SendMoney';
-import { ToastContainer } from 'react-toastify';
-import Bankrupt from './views/Bankrupt';
-import Bank from './views/Bank';
-import GameOver from './views/GameOver';
-import WinnerWinnerChickenDinner from './views/WinnerWinnerChickenDinner';
-import WithdrawMoney from './views/WithdrawMoney';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Game from "./views/Game";
+import SendMoney from "./views/SendMoney";
+import { ToastContainer } from "react-toastify";
+import Bankrupt from "./views/Bankrupt";
+import Bank from "./views/Bank";
+import GameOver from "./views/GameOver";
+import WinnerWinnerChickenDinner from "./views/WinnerWinnerChickenDinner";
+import WithdrawMoney from "./views/WithdrawMoney";
 
 function App() {
   return (
     <Router>
       <Switch>
         <Route path="/monopoly-e-wallet/" exact>
-          <Index/>
+          <Index />
         </Route>
         <Route path="/game/" exact>
-          <Game/>
+          <Game />
         </Route>
-        <Route path="/send/" exact>
-          <SendMoney/>
+        <Route path="/send/:user/:bank?">
+          <SendMoney />
         </Route>
         <Route path="/bankrupt/" exact>
-          <Bankrupt/>
+          <Bankrupt />
         </Route>
         <Route path="/bank/" exact>
-          <Bank/>
-          </Route>
+          <Bank />
+        </Route>
         <Route path="/gameover/" exact>
-          <GameOver/>
+          <GameOver />
         </Route>
         <Route path="/winner/" exact>
-          <WinnerWinnerChickenDinner/>
+          <WinnerWinnerChickenDinner />
         </Route>
-        <Route path="/withdraw/" exact>
-          <WithdrawMoney/>
+        <Route path="/withdraw/:user" exact>
+          <WithdrawMoney />
         </Route>
       </Switch>
       <ToastContainer />
