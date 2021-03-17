@@ -1,6 +1,6 @@
 import Logo from "../../components/Logo";
 import Swal from "sweetalert2";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import PlayerGroup from "../../components/PlayerGroup";
 import BottomButtons from "../../components/BottomButtons";
 
@@ -77,7 +77,7 @@ const Bank =()=>{
     },
     rightButton: {
       link:"winner",
-      text:"Historial de Transacciones"
+      text:"Finalizar Partida"
   },
     
   };

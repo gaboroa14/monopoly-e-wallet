@@ -12,6 +12,7 @@ import Bankrupt from './views/Bankrupt';
 import Bank from './views/Bank';
 import GameOver from './views/GameOver';
 import WinnerWinnerChickenDinner from './views/WinnerWinnerChickenDinner';
+import WithdrawMoney from './views/WithdrawMoney';
 
 function App() {
   return (
@@ -37,6 +38,9 @@ function App() {
         </Route>
         <Route path="/winner/" exact>
           <WinnerWinnerChickenDinner/>
+        </Route>
+        <Route path="/withdraw/" exact>
+          <WithdrawMoney/>
         </Route>
       </Switch>
       <ToastContainer />
