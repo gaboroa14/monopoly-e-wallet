@@ -91,7 +91,7 @@ const Index = () => {
   };
 
   return (
-    <section className="section is-centered has-background-danger">
+    <section className="section is-centered has-background-danger" style={{height:"100%"}}>
       <div className="container">
         <Logo mb="6" />
         <PlayerName 
@@ -113,7 +113,10 @@ const Index = () => {
         </div>
         <Footer />
       </div>
-    </section>
+      <div className="hero has-background-danger">
+        <div className="hero-body"></div>
+      </div>
+      </section>
   );
 };
 
