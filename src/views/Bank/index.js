@@ -30,17 +30,17 @@ const Bank =()=>{
                 denyButtonText: `Cobrar`,
                 }).then((result) => {
                 if (result.isConfirmed) {
-                    handleSendingMoney()
+                  handleWithdrawingMoney()
                 } else if (result.isDenied) {
-                    handleSendingMoney()
+                  handleWithdrawingMoney()
                 }
               });
         }
       });
   };
 
-  const handleSendingMoney = () => {
-    history.push("/send");
+  const handleWithdrawingMoney = () => {
+    history.push("/withdraw");
   };
 
   const players = [

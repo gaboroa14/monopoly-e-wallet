@@ -53,7 +53,7 @@ const WithdrawMoney = ({ user, saldoActual }) => {
     }
   };
 
-  const handleSendPayment = () => {
+  const handleWithdrawPayment = () => {
     //Varias cosas:
     //1) Valida que el monto a mandar no sea mayor al saldo del usuario.
     //2) Valida que el usuario haya introducido un monto.
@@ -92,12 +92,12 @@ const WithdrawMoney = ({ user, saldoActual }) => {
 
   const buttons = {
     leftButton: {
-      link: "game",
+      link: "bank",
       text: "Atrás",
     },
     rightButton: {
       text: "Cobrar",
-      action: handleSendPayment,
+      action: handleWithdrawPayment,
     },
   };
 
