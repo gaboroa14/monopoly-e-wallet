@@ -9,6 +9,7 @@ import Game from './views/Game';
 import SendMoney from './views/SendMoney';
 import { ToastContainer } from 'react-toastify';
 import Bankrupt from './views/Bankrupt';
+import Bank from './views/Bank';
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
         </Route>
         <Route path="/bankrupt/" exact>
           <Bankrupt/>
+        </Route>
+        <Route path="/bank/" exact>s
+          <Bank/>
         </Route>
       </Switch>
       <ToastContainer />
