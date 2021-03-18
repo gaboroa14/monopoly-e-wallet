@@ -1,0 +1,1 @@
+const ENDPOINT = "https://e-wallet-monopoly.herokuapp.com";

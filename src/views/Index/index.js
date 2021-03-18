@@ -7,7 +7,8 @@ import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-const ENDPOINT = "http://192.168.43.241:5000";
+import ENDPOINT from "../../config";
+
 
 let socket;
 

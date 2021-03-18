@@ -4,8 +4,11 @@ import { useHistory, Link } from "react-router-dom";
 import PlayerGroup from "../../components/PlayerGroup";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
+import { faSadCry } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ENDPOINT from "../../config";
+
 let socket;
-const ENDPOINT = "http://192.168.43.241:5000";
 
 const Game = () => {
   let history = useHistory();
@@ -75,33 +78,6 @@ const Game = () => {
     history.push(`/send/${user}`);
   };
 
-  // const players = [
-  //   {
-  //     playerName: "GABOX",
-  //     token: "http://placekitten.com/128/128",
-  //     amount: "1000",
-  //     action: showCurrentAmount,
-  //   },
-  //   {
-  //     playerName: "ANYI",
-  //     token: "http://placekitten.com/128/129",
-  //     amount: "~2000",
-  //     action: () => handleSendingMoney("ANYI"),
-  //   },
-  //   {
-  //     playerName: "AJAV06",
-  //     token: "http://placekitten.com/129/128",
-  //     amount: "~1000",
-  //     action: () => handleSendingMoney("AJAV06"),
-  //   },
-  //   {
-  //     playerName: "JONABB",
-  //     token: "http://placekitten.com/127/128",
-  //     amount: "~2000",
-  //     action: () => handleSendingMoney("JONABB"),
-  //   },
-  // ];
-
   return (
     <section className="section is-centered">
       <div className="container">
@@ -110,7 +86,9 @@ const Game = () => {
         <div className="columns is-mobile is-half is-centered has-text-centered">
           <div className="column is-12">
             <Link to="/bankrupt/">
-              <div className="box has-text-danger">chao cheo</div>
+              <div className="box has-text-danger">
+                <FontAwesomeIcon icon={faSadCry}/>
+              </div>
             </Link>
           </div>
         </div>

@@ -7,6 +7,8 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import { faAngleLeft, faShare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const WithdrawMoney = () => {
   let history = useHistory();
@@ -101,11 +103,11 @@ const WithdrawMoney = () => {
 
   const buttons = {
     leftButton: {
-      text: "Atrás",
+      text: <FontAwesomeIcon icon={faAngleLeft}/>,
       action: handleBackButtonClick
     },
     rightButton: {
-      text: "Cobrar",
+      text: <FontAwesomeIcon icon={faShare}/>,
       action: handleWithdrawPayment,
     },
   };

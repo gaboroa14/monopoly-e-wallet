@@ -1,3 +1,14 @@
+import {
+  faCat,
+  faPiggyBank,
+  faDog,
+  faShip,
+  faCar,
+  faQuestion,
+} from "@fortawesome/free-solid-svg-icons";
+
+const { FontAwesomeIcon } = require("@fortawesome/react-fontawesome");
+
 const Player = ({
   username,
   avatar,
@@ -7,10 +18,40 @@ const Player = ({
   winner,
   winnerScreen,
 }) => {
+  let ico;
+
+  switch (avatar) {
+    case "bank":
+      ico = faPiggyBank;
+      break;
+
+    case "cat":
+      ico = faCat;
+      break;
+
+    case "dog":
+      ico = faDog;
+      break;
+
+    case "ship":
+      ico = faShip;
+      break;
+
+    case "car":
+      ico = faCar;
+      break;
+
+    default:
+      ico = faQuestion;
+      break;
+  }
+
   return (
     <div
       onClick={action}
-      className={`card has-text-centered ${(!winner && winnerScreen) ? "tint" : undefined}`}
+      className={`card has-text-centered ${
+        !winner && winnerScreen ? "tint" : undefined
+      }`}
       style={
         gameover
           ? {
@@ -22,7 +63,7 @@ const Player = ({
           ? {
               boxShadow: "0 0 0 0.75rem #f9ee23",
             }
-          : undefined 
+          : undefined
       }
     >
       <header className="card-header is-size-3">
@@ -36,9 +77,7 @@ const Player = ({
         </div>
       </header>
       <div className="card-image is-128x128 has-text-black is-size-4">
-        
-          {avatar}
-        
+        <FontAwesomeIcon icon={ico}/>
       </div>
       <footer className="card-footer">
         <p className="card-footer-item has-text-black is-centered">

@@ -7,8 +7,11 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
+import ENDPOINT from "../../config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft, faHandHoldingUsd } from "@fortawesome/free-solid-svg-icons";
+
 let socket;
-const ENDPOINT = "http://192.168.43.241:5000";
 
 const SendMoney = () => {
   let history = useHistory();
@@ -123,11 +126,11 @@ const SendMoney = () => {
 
   const buttons = {
     leftButton: {
-      text: "Atrás",
+      text: <FontAwesomeIcon icon={faAngleLeft}/>,
       action: handleBackButtonClick,
     },
     rightButton: {
-      text: "Enviar",
+      text: <FontAwesomeIcon icon={faHandHoldingUsd}/>,
       action: handleSendPayment,
     },
   };

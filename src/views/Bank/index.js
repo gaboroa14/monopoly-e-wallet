@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-const ENDPOINT = "http://192.168.43.241:5000";
+import ENDPOINT from "../../config";
 
 let socket;
 
@@ -53,7 +53,7 @@ const Bank = () => {
       showCloseButton: true,
       showDenyButton: true,
       showCancelButton: true,
-      denyButtonColor: "green",
+      denyButtonColor: "#B85B28",
       confirmButtonText: `Pass Go`,
       denyButtonText: `Cobrar`,
       cancelButtonText: "Pagar",
@@ -83,32 +83,32 @@ const Bank = () => {
   const handleFinishGameClick = () => {
     Swal.fire({
       title: "¿Estás seguro de que quieres finalizar?",
-      confirmButtonColor: "green",
+      confirmButtonColor: "#71945B",
       confirmButtonText: "Sí",
-      cancelButtonColor: "red",
+      cancelButtonColor: "#B85B28",
       cancelButtonText: "No",
       showCancelButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
           title: "Esperando confirmación.",
-          confirmButtonColor: "green",
+          confirmButtonColor: "#71945B",
           confirmButtonText: "Sí",
-          cancelButtonColor: "red",
+          cancelButtonColor: "#B85B28",
           cancelButtonText: "No",
           showCancelButton: true,
         }).then((result) => {
           if (result.isConfirmed) {
             Swal.fire({
               title: "Partida finalizada con éxito",
-              confirmButtonColor: "green",
+              confirmButtonColor: "#71945B",
               confirmButtonText: "Aceptar",
             });
             history.push("/winner");
           } else if (result.isDismissed) {
             Swal.fire({
               title: "¡Han rechazado el fin del juego!",
-              confirmButtonColor: "green",
+              confirmButtonColor: "#71945B",
               confirmButtonText: "Aceptar",
             });
           }

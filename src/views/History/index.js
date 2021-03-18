@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBackward, faAmbulance } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faReceipt } from "@fortawesome/free-solid-svg-icons";
 import BottomButtons from "../../components/BottomButtons";
 import TransactionsTable from "../../components/TransactionsTable";
 import Logo from "../../components/Logo";
@@ -47,12 +47,16 @@ const History = () => {
 
   const buttons = {
     leftButton: {
-      text: <FontAwesomeIcon icon={faBackward} />,
+      text: <FontAwesomeIcon icon={faAngleLeft} />,
       action: () => history.push("/bank"),
     },
     rightButton: {
-      text: <FontAwesomeIcon icon={faAmbulance} />,
-      action: () => Swal.fire("AUXILIO ME DESMAYO CALLESE VIEJO LESBIANO"),
+      text: <FontAwesomeIcon icon={faReceipt} />,
+      action: () => Swal.fire({
+        title: "Hecho por Team MARVEL para el 1er reto interno de KURODev",
+        text: "Albert Acevedo, Gabriel Roa, Jonathan Calles",
+        icon: "success",
+      }),
     },
   };
 
