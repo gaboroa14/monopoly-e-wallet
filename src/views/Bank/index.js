@@ -8,9 +8,44 @@ import {
   faAddressBook,
   faHourglassEnd,
 } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+const ENDPOINT = "http://192.168.43.241:5000";
+
+let socket;
 
 const Bank = () => {
   let history = useHistory();
+
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) history.push("/monopoly-e-wallet");
+  else if (user.avatar !== "bank") history.push("/game");
+
+  const [users, setUsers] = useState([]);
+
+  // CONEXIÓN CON EL BACKEND
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    return () => {
+      //socket.emit("disconnect");
+      socket.off();
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.emit("get-users", user.room._id, (response) => {
+      response = response.map((item) => {
+        return {
+          username: item.username,
+          avatar: item.avatar,
+          amount: item.amount,
+          action: () => handleSendingMoney(item.username)
+        };
+      });
+      setUsers(response);
+    })
+  }, []);
 
   const showBankerOptions = (user) => {
     Swal.fire({
@@ -40,34 +75,7 @@ const Bank = () => {
   const handleSendingMoney = (user) => {
     history.push(`/send/${user}/t`);
   };
-
-  const players = [
-    {
-      playerName: "GABOX",
-      token: "http://placekitten.com/128/128",
-      amount: "1000",
-      action: () => showBankerOptions("GABOX"),
-    },
-    {
-      playerName: "ANYI",
-      token: "http://placekitten.com/128/129",
-      amount: "2000",
-      action: () => showBankerOptions("ANYI"),
-    },
-    {
-      playerName: "AJAV06",
-      token: "http://placekitten.com/129/128",
-      amount: "1000",
-      action: () => showBankerOptions("AJAV06"),
-    },
-    {
-      playerName: "JONABB",
-      token: "http://placekitten.com/127/128",
-      amount: "2000",
-      action: () => showBankerOptions("JONABB"),
-    },
-  ];
-
+  
   const handleHistoryClick = () => {
     history.push("/history/");
   };
@@ -123,7 +131,7 @@ const Bank = () => {
     <section className="section is-centered">
       <div className="container">
         <Logo />
-        <PlayerGroup players={players} />
+        <PlayerGroup players={users} />
         <BottomButtons {...buttons} />
       </div>
     </section>

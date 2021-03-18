@@ -1,17 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Keyboard from "../../components/Keyboard";
 import Logo from "../../components/Logo";
 import BottomButtons from "../../components/BottomButtons";
 import { useHistory, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
+import { io } from "socket.io-client";
+let socket;
+const ENDPOINT = "http://192.168.43.241:5000";
 
 const SendMoney = () => {
   let history = useHistory();
 
-  const {user, bank} = useParams();
+  let currentUser = JSON.parse(localStorage.getItem("user"));
+
+  if (!currentUser) history.push("/monopoly-e-wallet");
+
+  // CONEXIÓN CON EL BACKEND
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    return () => {
+      //socket.emit("disconnect");
+      socket.off();
+    };
+  }, []);
+
+  const { user, bank } = useParams();
 
   const saldoActual = "1.000";
 
@@ -63,6 +78,10 @@ const SendMoney = () => {
     //2) Valida que el usuario haya introducido un monto.
     //3) Envía el dinero al usuario (backend)
     //4) Devuelve al menú principal
+    if (!bank && monto > JSON.parse(localStorage.getItem("user")).amount) {
+      Swal.fire("te falta cobre");
+      return;
+    }
     if (monto.length !== 0) {
       Swal.fire({
         title: `¿Enviarle ₩${monto} a ${user}?`,
@@ -73,6 +92,12 @@ const SendMoney = () => {
         showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
+          socket.emit("send-transaction", {
+            user_id: JSON.parse(localStorage.getItem("user"))._id,
+            amount: monto,
+            room_id: JSON.parse(localStorage.getItem("user")).room._id,
+            to_user: user
+          });
           Swal.fire({
             title: `Enviaste ₩${monto} a ${user}`,
             confirmButtonColor: "#71945B",
@@ -94,12 +119,12 @@ const SendMoney = () => {
     }
   };
 
-  const handleBackButtonClick = () => history.push(bank ? "/bank" : "/game")
+  const handleBackButtonClick = () => history.push(bank ? "/bank" : "/game");
 
   const buttons = {
     leftButton: {
       text: "Atrás",
-      action: handleBackButtonClick
+      action: handleBackButtonClick,
     },
     rightButton: {
       text: "Enviar",
@@ -119,7 +144,10 @@ const SendMoney = () => {
           </div>
           <div className="level-item">
             <div className="level-right">
-              <strong className="mr-2">{bank ? `Saldo de ${user}:` : "Tu saldo es:"}</strong> ₩{saldoActual}
+              <strong className="mr-2">
+                {bank ? `Saldo de ${user}:` : "Tu saldo es:"}
+              </strong>{" "}
+              ₩{saldoActual}
             </div>
           </div>
         </div>

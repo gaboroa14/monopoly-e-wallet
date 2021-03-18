@@ -8,17 +8,17 @@ const PlayerGroup = ({ players, winner }) => {
           // eslint-disable-next-line
           players.map((value, index) => {
             if (winner) {
-              if (index === 0 || index === 1)
+              if (index === 1 || index === 2)
                 return (
                   <div key={index} className="column is-6">
                     <Player
                       {...value}
-                      winner={winner === value.playerName ? winner : undefined}
+                      winner={winner === value.username ? winner : undefined}
                       winnerScreen={true}
                     />
                   </div>
                 );
-            } else if (index === 0 || index === 1)
+            } else if (index === 1 || index === 2)
               return (
                 <div key={index} className="column is-6">
                   <Player {...value} />
@@ -33,17 +33,17 @@ const PlayerGroup = ({ players, winner }) => {
           // eslint-disable-next-line
           players.map((value, index) => {
             if (winner) {
-              if (index === 2 || index === 3)
+              if (index === 3 || index === 4)
                 return (
                   <div key={index} className="column is-6">
                     <Player
                       {...value}
-                      winner={winner === value.playerName ? winner : undefined}
+                      winner={winner === value.username ? winner : undefined}
                       winnerScreen={true}
                     />
                   </div>
                 );
-            } else if (index === 2 || index === 3)
+            } else if (index === 3 || index === 4)
               return (
                 <div key={index} className="column is-6">
                   <Player {...value} />

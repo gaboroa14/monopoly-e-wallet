@@ -9,6 +9,11 @@ import Swal from "sweetalert2";
 const History = () => {
   let history = useHistory();
 
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) history.push("/monopoly-e-wallet");
+  else if (user.avatar!=="bank") history.push("/game");
+
   const transactions = [
     {
       index: "4",

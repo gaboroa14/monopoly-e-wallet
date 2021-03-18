@@ -15,6 +15,10 @@ const WithdrawMoney = () => {
   const [hasComma, setHasComma] = useState(false);
   const [afterComma, setAfterComma] = useState(0);
 
+  let currentUser = JSON.parse(localStorage.getItem("user"));
+
+  if (!currentUser) history.push("/monopoly-e-wallet");
+
   const {user} = useParams();
   const saldoActual = "1.000";
 

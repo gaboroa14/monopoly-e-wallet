@@ -7,6 +7,10 @@ import PlayerGroup from "../../components/PlayerGroup";
 const WinnerWinnerChickenDinner = () => {
     let history = useHistory();
 
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) history.push("/monopoly-e-wallet");
+    
   const handleHomeButtonClick = () => {
     history.push("/monopoly-e-wallet/");
   };

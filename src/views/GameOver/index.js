@@ -1,11 +1,15 @@
 import Logo from "../../components/Logo";
 import Player from "../../components/Player";
 import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 const GameOver = () => {
-    let history = useHistory();
+  let history = useHistory();
+  
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) history.push("/monopoly-e-wallet");
 
   const handleHomeButtonClick = () => {
     history.push("/monopoly-e-wallet/");
@@ -28,7 +32,7 @@ const GameOver = () => {
           onClick={handleHomeButtonClick}
         >
           <span className="icon is-medium">
-            <FontAwesomeIcon icon={faHome}/>
+            <FontAwesomeIcon icon={faHome} />
           </span>
         </button>
       </div>

@@ -7,6 +7,10 @@ import { useHistory } from "react-router-dom";
 const Bankrupt = () => {
   let history = useHistory();
 
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) history.push("/monopoly-e-wallet");
+
   const handleBankruptcy = (who) => {
     Swal.fire({
       title: `¿Estás seguro que te quebró ${who}?`,
@@ -51,8 +55,8 @@ const Bankrupt = () => {
 
   const buttons = {
     leftButton: {
-        link:"game",
-        text:"Atrás"
+      link: "game",
+      text: "Atrás",
     },
   };
 
