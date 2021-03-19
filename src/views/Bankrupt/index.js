@@ -8,12 +8,14 @@ import config from "../../config";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faSadTear } from "@fortawesome/free-solid-svg-icons";
+import { ClapSpinner } from "react-spinners-kit";
 
 let socket;
 
 const Bankrupt = () => {
   const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   let history = useHistory();
 
   let user = JSON.parse(localStorage.getItem("user"));
@@ -42,8 +44,9 @@ const Bankrupt = () => {
   // OBTENER LOS USUARIOS POR PRIMERA VEZ
   useEffect(() => {
     socket.emit("get-users", user?.room._id, (response) => {
-      response = response.map((item) => {
-        if (item.username !== user.username)
+      response = response
+        .filter((item) => item.username !== user.username)
+        .map((item) => {
           return {
             username: item.username,
             avatar: item.avatar === "bank" ? "university" : item.avatar,
@@ -56,8 +59,9 @@ const Bankrupt = () => {
                       confirmButtonText: "Chale",
                     }),
           };
-      });
+        });
       setUsers(response);
+      setIsLoading(false);
     });
   }, []);
 
@@ -80,12 +84,19 @@ const Bankrupt = () => {
             to_user: who,
           },
           (response) => {
-            if (response)
+            if (response) {
               history.push(`/monopoly-e-wallet/winner/${response}`);
+              return;
+            }
           }
         );
         user.amount = 0;
         localStorage.setItem("user", JSON.stringify(user));
+        Swal.fire({
+          title: "¡Te fuiste a la quiebra!",
+          confirmButtonText: "Chale",
+        });
+        setTimeout(() => history.push("/monopoly-e-wallet/game/", 1000));
       }
     });
   };
@@ -100,12 +111,27 @@ const Bankrupt = () => {
   return (
     <section className="section is-centered">
       <div className="container has-text-black has-text-centered">
+        <div
+          className="box is-centered has-text-centered"
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 100,
+            visibility: isLoading ? "visible" : "hidden",
+          }}
+        >
+          <ClapSpinner loading={isLoading} />
+        </div>
         <Logo mb="2" />
         <h1 class="title is-3" style={{ marginBottom: "-0.5rem" }}>
           ¿Quién te llevó a la bancarrota?
         </h1>
-        <PlayerGroup players={users} />
-        <BottomButtons {...buttons} />
+        <div style={{ visibility: isLoading ? "hidden" : "visible" }}>
+          <PlayerGroup players={users} />
+          <BottomButtons {...buttons} />
+        </div>
       </div>
     </section>
   );

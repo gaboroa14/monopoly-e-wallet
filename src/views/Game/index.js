@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import config from "../../config";
 import Button from "../../components/Button";
 import { toast } from "react-toastify";
+import { ClapSpinner } from "react-spinners-kit";
 
 let socket;
 
@@ -21,6 +22,7 @@ const Game = () => {
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   if (!user) history.push("/monopoly-e-wallet/");
   else if (user.avatar === "bank") history.push("/monopoly-e-wallet/bank");
@@ -51,6 +53,14 @@ const Game = () => {
     });
   };
 
+  // MONTO APROXIMADO
+  const getApproxAmount = (exactAmount) => {
+    let firstDigit = exactAmount.toString()[0];
+    let zeroesQuantity = exactAmount.toString().substr(1).length;
+    let approx = firstDigit.concat("0".repeat(zeroesQuantity));
+    return approx;
+  };
+
   // OBTENER LOS USUARIOS POR PRIMERA VEZ
   useEffect(() => {
     socket.emit("get-users", user?.room._id, (response) => {
@@ -58,7 +68,10 @@ const Game = () => {
         return {
           username: item.username,
           avatar: item.avatar,
-          amount: item.amount,
+          amount:
+            item.username === user.username
+              ? item.amount
+              : `~${getApproxAmount(item.amount)}`,
           action:
             JSON.parse(localStorage.getItem("user")).username === item.username
               ? showCurrentAmount
@@ -68,6 +81,7 @@ const Game = () => {
         };
       });
       setUsers(response);
+      setIsLoading(false);
     });
   }, []);
 
@@ -78,6 +92,8 @@ const Game = () => {
       if (res.to_user === myUser.username) {
         toast.dark(`${res.username} te ha enviado ₩${res.amount}`);
       }
+      myUser.amount += res.amount;
+      localStorage.setItem("user", JSON.stringify(myUser));
     });
   }, []);
 
@@ -87,6 +103,8 @@ const Game = () => {
       const myUser = JSON.parse(localStorage.getItem("user"));
       if (res.to_user === myUser.username) {
         toast.dark(`El banco te ha cobrado ₩${res.amount}`);
+        myUser.amount -= res.amount;
+        localStorage.setItem("user", JSON.stringify(myUser));
       }
     });
   }, []);
@@ -119,6 +137,10 @@ const Game = () => {
         return {
           username: item.username,
           avatar: item.avatar,
+          amount:
+            item.username === user.username
+              ? item.amount
+              : `~${getApproxAmount(item.amount)}`,
           action:
             JSON.parse(localStorage.getItem("user")).username === item.username
               ? showCurrentAmount
@@ -131,7 +153,10 @@ const Game = () => {
 
   const showCurrentAmount = () => {
     Swal.fire({
-      title: user.amount !== 0 ? `Su saldo es ₩${user.amount}` : "Estás en la quiebra.",
+      title:
+        user.amount !== 0
+          ? `Su saldo es ₩${user.amount}`
+          : "Estás en la quiebra.",
       confirmButtonColor: "#71945B",
       confirmButtonText: "Aceptar",
     });
@@ -152,9 +177,26 @@ const Game = () => {
     <section className="section is-centered">
       <div className="container">
         <Logo />
-        <PlayerGroup players={users} key="0" />
-
-        <div className="columns is-mobile is-half is-centered has-text-centered">
+        <div
+          className="box is-centered has-text-centered"
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 100,
+            visibility: isLoading ? "visible" : "hidden",
+          }}
+        >
+          <ClapSpinner loading={isLoading} />
+        </div>
+        <div style={{ visibility: isLoading ? "hidden" : "visible" }}>
+          <PlayerGroup players={users} key="0" />
+        </div>
+        <div
+          className="columns is-mobile is-half is-centered has-text-centered"
+          style={{ visibility: isLoading ? "hidden" : "visible" }}
+        >
           <Button
             action={() => {
               localStorage.removeItem("user");
@@ -169,9 +211,9 @@ const Game = () => {
                 user.amount !== 0
                   ? () => history.push("/monopoly-e-wallet/bankrupt")
                   : () => {
-                    localStorage.removeItem("user");
-                    history.push("/monopoly-e-wallet/")
-                  }
+                      localStorage.removeItem("user");
+                      history.push("/monopoly-e-wallet/");
+                    }
               }
             >
               <FontAwesomeIcon icon={user.amount !== 0 ? faSadCry : faHome} />

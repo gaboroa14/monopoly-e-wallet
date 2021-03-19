@@ -1,6 +1,8 @@
 const TransactionsTable = ({ transactions }) => {
   return (
-    <table className="table is-small">
+    <table className="table is-small" style={{
+      marginLeft: "auto",
+      marginRight: "auto",}}>
       <thead>
         <tr>
           <th>Tipo</th>

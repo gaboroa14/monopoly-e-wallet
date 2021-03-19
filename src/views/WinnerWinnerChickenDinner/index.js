@@ -7,6 +7,7 @@ import PlayerGroup from "../../components/PlayerGroup";
 import config from "../../config";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import BottomButtons from "../../components/BottomButtons";
 
 let socket;
 
@@ -16,7 +17,7 @@ const WinnerWinnerChickenDinner = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [users, setUsers] = useState([]);
 
-  const {winner} = useParams();
+  const { winner } = useParams();
 
   if (!user) history.push("/monopoly-e-wallet/");
 
@@ -59,6 +60,13 @@ const WinnerWinnerChickenDinner = () => {
     history.push("/monopoly-e-wallet/");
   };
 
+  const buttons = {
+    leftButton: {
+      text: <FontAwesomeIcon icon={faHome} />,
+      action: handleHomeButtonClick,
+    },
+  };
+
   return (
     <section className="section is-centered">
       <div className="container is-centered has-text-centered">
@@ -66,14 +74,8 @@ const WinnerWinnerChickenDinner = () => {
         <h1 className="title is-2">FIN DEL JUEGO</h1>
         <h1 className="title is-3">{winner} es el ganador</h1>
         <PlayerGroup players={users} winner={winner} />
-        <button
-          className="button is-rounded is-large mt-5"
-          onClick={handleHomeButtonClick}
-        >
-          <span className="icon is-medium">
-            <FontAwesomeIcon icon={faHome} />
-          </span>
-        </button>
+
+        <BottomButtons {...buttons} />
       </div>
     </section>
   );

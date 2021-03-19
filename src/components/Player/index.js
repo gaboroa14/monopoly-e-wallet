@@ -71,7 +71,7 @@ const Player = ({
           : undefined
       }
     >
-      <header className="card-header is-size-3">
+      <header className="card-header is-size-4">
         <div className="card-header-title is-centered">
           <div
             className="has-background-warning pl-5 pr-5 pt-1 has-text-white"

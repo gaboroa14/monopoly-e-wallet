@@ -8,12 +8,14 @@ import Swal from "sweetalert2";
 import config from "../../config";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { ClapSpinner } from "react-spinners-kit";
 
 let socket;
 
 const History = () => {
   let history = useHistory();
   const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   let user = JSON.parse(localStorage.getItem("user"));
 
@@ -43,7 +45,7 @@ const History = () => {
     socket.emit("get-transactions", user.room._id, (response) => {
       response = response.map((value, index) => {
         return {
-          type: value.type === 'e' ? "Envío" : "Cobro",
+          type: value.type === "e" ? "Envío" : "Cobro",
           sender: value.username,
           receiver: value.to_user,
           amount: value.amount,
@@ -51,39 +53,9 @@ const History = () => {
         };
       });
       setTransactions(response);
+      setIsLoading(false);
     });
   }, []);
-
-  // const transactions = [
-  //   {
-  //     index: "4",
-  //     sender: "ANYI",
-  //     receiver: "GABOX",
-  //     amount: "1000",
-  //     hour: "04:44 p.m.",
-  //   },
-  //   {
-  //     index: "3",
-  //     sender: "AJAV06",
-  //     receiver: "GABOX",
-  //     amount: "125",
-  //     hour: "04:42 p.m.",
-  //   },
-  //   {
-  //     index: "2",
-  //     sender: "JONABB",
-  //     receiver: "AJAV06",
-  //     amount: "2500",
-  //     hour: "04:38 p.m.",
-  //   },
-  //   {
-  //     index: "1",
-  //     sender: "GABOX",
-  //     receiver: "ANYI",
-  //     amount: "37",
-  //     hour: "04:34 p.m.",
-  //   },
-  // ];
 
   const buttons = {
     leftButton: {
@@ -94,7 +66,7 @@ const History = () => {
       text: <FontAwesomeIcon icon={faReceipt} />,
       action: () =>
         Swal.fire({
-          title: "Hecho por Team MARVEL para el 1er reto interno de KURODev",
+          title: "Team MARVEL - I Reto Interno KURODev",
           text: "Albert Acevedo, Gabriel Roa, Jonathan Calles",
           icon: "success",
         }),
@@ -102,11 +74,31 @@ const History = () => {
   };
 
   return (
-    <section className="section is-centered">
-      <div className="container">
+    <section className="section is-centered has-text-centered">
+      <div className="container is-centered has-text-centered">
         <Logo mb="0" />
-        <BottomButtons {...buttons} />
-        <TransactionsTable transactions={transactions} />
+        <div
+          className="box is-centered has-text-centered"
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 100,
+            visibility: isLoading ? "visible" : "hidden",
+          }}
+        >
+          <ClapSpinner loading={isLoading} />
+        </div>
+        <div
+          className="is-centered has-text-centered"
+          style={{
+            visibility: isLoading ? "hidden" : "visible"
+          }}
+        >
+          <BottomButtons {...buttons} />
+          <TransactionsTable transactions={transactions} />
+        </div>
       </div>
     </section>
   );

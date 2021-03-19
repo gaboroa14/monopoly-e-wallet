@@ -14,10 +14,12 @@ import { io } from "socket.io-client";
 import config from "../../config";
 import Button from "../../components/Button";
 import { toast } from "react-toastify";
+import { ClapSpinner } from "react-spinners-kit";
 
 let socket;
 
 const Bank = () => {
+  const [isLoading, setIsLoading] = useState(true);
   let history = useHistory();
 
   let user = JSON.parse(localStorage.getItem("user"));
@@ -80,6 +82,7 @@ const Bank = () => {
         };
       });
       setUsers(response);
+      setIsLoading(false);
     });
   };
 
@@ -97,10 +100,14 @@ const Bank = () => {
           username: item.username,
           avatar: item.avatar,
           amount: item.amount,
-          action: item.amount !== 0 ? () => showBankerOptions(item.username) : () => Swal.fire({
-            title: "¡Este jugador está quebrado!",
-            confirmButtonText: "Chale"
-          }),
+          action:
+            item.amount !== 0
+              ? () => showBankerOptions(item.username)
+              : () =>
+                  Swal.fire({
+                    title: "¡Este jugador está quebrado!",
+                    confirmButtonText: "Chale",
+                  }),
         };
       });
       setUsers(response);
@@ -202,15 +209,30 @@ const Bank = () => {
     <section className="section is-centered">
       <div className="container">
         <Logo />
-        <Button
-          action={() => {
-            localStorage.removeItem("user");
-            history.push("/monopoly-e-wallet/");
+        <div
+          className="box is-centered has-text-centered"
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 100,
+            visibility: isLoading ? "visible" : "hidden",
           }}
-          text={<FontAwesomeIcon icon={faAirFreshener} />}
-        />
-        <PlayerGroup players={users} />
-        <BottomButtons {...buttons} />
+        >
+          <ClapSpinner loading={isLoading} />
+        </div>
+        <div style={{ visibility: isLoading ? "hidden" : "visible" }}>
+          <Button
+            action={() => {
+              localStorage.removeItem("user");
+              history.push("/monopoly-e-wallet/");
+            }}
+            text={<FontAwesomeIcon icon={faAirFreshener} />}
+          />
+          <PlayerGroup players={users} />
+          <BottomButtons {...buttons} />
+        </div>
       </div>
     </section>
   );

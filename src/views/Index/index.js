@@ -111,7 +111,7 @@ const Index = () => {
 
     if (!validateField()) return;
 
-    socket.emit("create-room", playerName, ({ user, quantity, error }) => {
+    socket.emit("create-room", playerName.toUpperCase(), ({ user, quantity, error }) => {
       localStorage.setItem("user", JSON.stringify(user));
       Swal.fire({
         title: `El código de la sala es: ${user.room._id}`,
@@ -178,7 +178,7 @@ const Index = () => {
       } else {
         socket.emit(
           "join",
-          { username: playerName, room_id: result.value },
+          { username: playerName.toUpperCase(), room_id: result.value },
           ({ error, user, quantity }) => {
             if (error) {
               Swal.fire({

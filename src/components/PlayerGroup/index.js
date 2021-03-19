@@ -1,17 +1,20 @@
 import Player from "../Player";
 
 const PlayerGroup = ({ players, winner }) => {
+  console.log(players);
+
   return (
     <div>
-      <div className="columns is-mobile is-centered has-text-centered mt-1">
+      <div className="columns is-mobile is-centered has-text-centered mt-1 ">
         {
           // eslint-disable-next-line
           players.map((value, index) => {
             if (winner) {
-              if ( value &&
+              if (
+                value &&
                 ((index === 0 && value.avatar !== "bank") ||
-                index === 1 ||
-                index === 2)
+                  index === 1 ||
+                  (index === 2 && players[0].avatar === "bank"))
               )
                 return (
                   <div key={index} className="column is-6">
@@ -22,11 +25,12 @@ const PlayerGroup = ({ players, winner }) => {
                     />
                   </div>
                 );
-            } else if ( value && (
-              (index === 0 && value.avatar !== "bank") ||
-              index === 1 ||
-              index === 2
-            ))
+            } else if (
+              value &&
+              ((index === 0 && value.avatar !== "bank") ||
+                index === 1 ||
+                (index === 2 && players[0].avatar === "bank"))
+            )
               return (
                 <div key={index} className="column is-6">
                   <Player {...value} />
@@ -41,7 +45,11 @@ const PlayerGroup = ({ players, winner }) => {
           // eslint-disable-next-line
           players.map((value, index) => {
             if (winner) {
-              if (index === 3 || index === 4)
+              if (
+                (index === 2 && players[0].avatar !== "bank") ||
+                index === 3 ||
+                index === 4
+              )
                 return (
                   <div key={index} className="column is-6">
                     <Player
@@ -51,7 +59,11 @@ const PlayerGroup = ({ players, winner }) => {
                     />
                   </div>
                 );
-            } else if (index === 3 || index === 4)
+            } else if (
+              (index === 2 && players[0].avatar !== "bank") ||
+              index === 3 ||
+              index === 4
+            )
               return (
                 <div key={index} className="column is-6">
                   <Player {...value} />
