@@ -7,9 +7,12 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
-import ENDPOINT from "../../config";
+import config from "../../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faHandHoldingUsd } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faHandHoldingUsd,
+} from "@fortawesome/free-solid-svg-icons";
 
 let socket;
 
@@ -22,7 +25,7 @@ const SendMoney = () => {
 
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(config.ENDPOINT);
     return () => {
       //socket.emit("disconnect");
       socket.off();
@@ -99,14 +102,14 @@ const SendMoney = () => {
             user_id: JSON.parse(localStorage.getItem("user"))._id,
             amount: monto,
             room_id: JSON.parse(localStorage.getItem("user")).room._id,
-            to_user: user
+            to_user: user,
           });
           Swal.fire({
             title: `Enviaste ₩${monto} a ${user}`,
             confirmButtonColor: "#71945B",
             confirmButtonText: "Aceptar",
           });
-          handleBackButtonClick();
+          setTimeout(() => handleBackButtonClick(), 500);
         }
       });
     } else {
@@ -126,11 +129,11 @@ const SendMoney = () => {
 
   const buttons = {
     leftButton: {
-      text: <FontAwesomeIcon icon={faAngleLeft}/>,
+      text: <FontAwesomeIcon icon={faAngleLeft} />,
       action: handleBackButtonClick,
     },
     rightButton: {
-      text: <FontAwesomeIcon icon={faHandHoldingUsd}/>,
+      text: <FontAwesomeIcon icon={faHandHoldingUsd} />,
       action: handleSendPayment,
     },
   };

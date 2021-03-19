@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Keyboard from "../../components/Keyboard";
 import Logo from "../../components/Logo";
 import BottomButtons from "../../components/BottomButtons";
@@ -9,6 +9,10 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { faAngleLeft, faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import config from "../../config";
+import { io } from "socket.io-client";
+
+let socket;
 
 const WithdrawMoney = () => {
   let history = useHistory();
@@ -21,7 +25,26 @@ const WithdrawMoney = () => {
 
   if (!currentUser) history.push("/monopoly-e-wallet");
 
-  const {user} = useParams();
+  // CONECTO CON EL BACKEND
+  useEffect(() => {
+    socket = io(config.ENDPOINT);
+    const u = JSON.parse(localStorage.getItem("user"));
+    socket.emit(
+      "join",
+      { username: u.username, room_id: u.room._id },
+      ({ error, user, quantity }) => {
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+      }
+    );
+    return () => {
+      //socket.emit("disconnect");
+      socket.off();
+    };
+  }, []);
+
+  const { user } = useParams();
   const saldoActual = "1.000";
 
   const appendNumberToInput = (number) => {
@@ -78,12 +101,19 @@ const WithdrawMoney = () => {
         showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
+          socket.emit("bank-debit", {
+            user_id: JSON.parse(localStorage.getItem("user"))._id,
+            amount: monto,
+            room_id: JSON.parse(localStorage.getItem("user")).room._id,
+            to_user: user,
+          });
           Swal.fire({
             title: `Cobraste ₩${monto} a ${user}`,
             confirmButtonColor: "#71945B",
             confirmButtonText: "Aceptar",
           });
-          history.push("/bank");
+          setTimeout(() => handleBackButtonClick(), 500);
+          handleBackButtonClick();
         }
       });
     } else {
@@ -103,11 +133,11 @@ const WithdrawMoney = () => {
 
   const buttons = {
     leftButton: {
-      text: <FontAwesomeIcon icon={faAngleLeft}/>,
-      action: handleBackButtonClick
+      text: <FontAwesomeIcon icon={faAngleLeft} />,
+      action: handleBackButtonClick,
     },
     rightButton: {
-      text: <FontAwesomeIcon icon={faShare}/>,
+      text: <FontAwesomeIcon icon={faShare} />,
       action: handleWithdrawPayment,
     },
   };
@@ -124,13 +154,17 @@ const WithdrawMoney = () => {
           </div>
           <div className="level-item">
             <div className="level-right">
-              <strong className="mr-2">Saldo de {user}:</strong>  ₩{saldoActual}
+              <strong className="mr-2">Saldo de {user}:</strong> ₩{saldoActual}
             </div>
           </div>
         </div>
         <div className="columns is-mobile is-centered is-half mb-3">
           <div className="column is-two-thirds">
-            <input className="input is-size-2 has-text-centered" value={`₩ ${monto}`} readOnly />
+            <input
+              className="input is-size-2 has-text-centered"
+              value={`₩ ${monto}`}
+              readOnly
+            />
           </div>
         </div>
 

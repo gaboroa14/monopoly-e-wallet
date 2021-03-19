@@ -76,7 +76,7 @@ const Player = ({
           </div>
         </div>
       </header>
-      <div className="card-image is-128x128 has-text-black is-size-4">
+      <div className="card-image is-128x128 has-text-black is-size-1">
         <FontAwesomeIcon icon={ico}/>
       </div>
       <footer className="card-footer">

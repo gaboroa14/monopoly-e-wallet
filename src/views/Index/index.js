@@ -7,19 +7,12 @@ import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-import ENDPOINT from "../../config";
-
+import config from "../../config";
 
 let socket;
 
 const Index = () => {
-  const [playerName, setPlayerName] = useState("");
-  const [joinedPeopleQty, setJoinedPeopleQty] = useState(1);
-  const [user, setUser] = useState(
-    localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user"))
-      : undefined
-  );
+  const [playerName, setPlayerName] = useState(Math.random().toString(36).substr(2,4));
 
   let history = useHistory();
 
@@ -35,7 +28,7 @@ const Index = () => {
 
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(config.ENDPOINT);
     return () => {
       //socket.emit("disconnect");
       socket.off();
@@ -46,8 +39,21 @@ const Index = () => {
 
   // Personas se unen a la partida.
   useEffect(() => {
+    socket.on("joined", (response) => {
+      if (Swal.getHtmlContainer()) {
+        if (response.quantity >= 3) Swal.enableButtons();
+        Swal.getHtmlContainer().innerHTML = `Esperando jugadores. ${
+          response.quantity
+        } persona${response.quantity !== 1 ? "s" : ""} se ha${
+          response.quantity !== 1 ? "n" : ""
+        } unido.`;
+      }
+    });
+  }, []);
+
+  // Personas se unen a la partida.
+  useEffect(() => {
     socket.on("person-join-left", (response) => {
-      setJoinedPeopleQty(response.quantity);
       if (Swal.getHtmlContainer()) {
         if (response.quantity >= 3) Swal.enableButtons();
         Swal.getHtmlContainer().innerHTML = `Esperando jugadores. ${
@@ -67,8 +73,6 @@ const Index = () => {
         confirmButtonText: "Aceptar",
       });
       localStorage.removeItem("user");
-      setUser(undefined);
-      setJoinedPeopleQty(1);
     });
   }, []);
 
@@ -102,23 +106,14 @@ const Index = () => {
   const handleCreateClick = () => {
     // Conectar con el backend para crear una sala.
     // Devuelve un objeto de tipo user que se guarda en localStorage.
-    setJoinedPeopleQty(1);
 
     if (!validateField()) return;
 
-    if (localStorage.getItem("user")) alert("borrar mi sala");
-    // socket.emit(
-    //   "delete-room",
-    //   JSON.parse(localStorage.getItem("user")).room._id
-    // );
-    socket.emit("create-room", playerName, (response) => {
-      localStorage.setItem("user", JSON.stringify(response));
-      setUser(response);
+    socket.emit("create-room", playerName, ({user, quantity, error}) => {
+      localStorage.setItem("user", JSON.stringify(user));
       Swal.fire({
-        title: `El código de la sala es: ${response.room._id}`,
-        text: `Esperando jugadores. ${joinedPeopleQty} persona${
-          joinedPeopleQty !== 1 ? "s" : ""
-        } se ha${joinedPeopleQty !== 1 ? "n" : ""} unido.`,
+        title: `El código de la sala es: ${user.room._id}`,
+        text: `Esperando jugadores. 1 persona se ha unido.`,
         confirmButtonColor: "#71945B",
         cancelButtonColor: "#B85B28",
         confirmButtonText: "Comenzar",
@@ -138,16 +133,24 @@ const Index = () => {
             if (result.isConfirmed) {
               socket.emit(
                 "begin-game",
-                JSON.parse(localStorage.getItem("user")).room._id,
-                (error) => {
+                JSON.parse(localStorage.getItem("user")).room._id, (error) => {
                   if (error)
-                    Swal.fire({ title: `Error: ${error}`, icon: "warning" });
+                  Swal.fire({
+                    title: `Error: ${error}`,
+                    icon: 'warning'
+                  })
                 }
               );
             }
           });
-        } else if (result.isDismissed && JSON.parse(localStorage.getItem("user"))) {
-          socket.emit("delete-room", JSON.parse(localStorage.getItem("user")).room._id);
+        } else if (
+          result.isDismissed &&
+          JSON.parse(localStorage.getItem("user"))
+        ) {
+          // socket.emit(
+          //   "delete-room",
+          //   JSON.parse(localStorage.getItem("user")).room._id
+          // );
         }
       });
       Swal.showLoading(Swal.getDenyButton());
@@ -163,7 +166,7 @@ const Index = () => {
         value: "ldkj",
       },
     }).then((result) => {
-      if (result.value.length !== 6) {
+      if (result.value.length !== 3) {
         Swal.fire({
           title: "Debe introducir un código válido",
           confirmButtonColor: "#71945B",
@@ -182,11 +185,9 @@ const Index = () => {
               });
               return;
             }
-            setUser(user);
-            setJoinedPeopleQty(quantity);
             localStorage.setItem("user", JSON.stringify(user));
             Swal.fire({
-              title: `El código de la sala es: ${result.value}`,
+              title: `El código de la sala es: ${result.value.toUpperCase()}`,
               text: `Esperando jugadores. ${quantity} persona${
                 quantity !== 1 ? "s" : ""
               } se ha${quantity !== 1 ? "n" : ""} unido.`,
@@ -198,8 +199,6 @@ const Index = () => {
               if (result.isDenied) {
                 socket.emit("delete-user", user._id, (response) => {
                   localStorage.removeItem("user");
-                  setUser(undefined);
-                  setJoinedPeopleQty(1);
                 });
               }
             });

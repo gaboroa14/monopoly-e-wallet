@@ -3,7 +3,7 @@ const TransactionsTable = ({ transactions }) => {
     <table className="table is-small">
       <thead>
         <tr>
-          <th>Nro</th>
+          <th>Tipo</th>
           <th>Envió</th>
           <th>Recibió</th>
           <th>Monto</th>
@@ -13,7 +13,7 @@ const TransactionsTable = ({ transactions }) => {
       <tbody>
         {transactions?.map((value) => (
           <tr>
-            <td>{value.index}</td>
+            <td>{value.type}</td>
             <td>{value.sender}</td>
             <td>{value.receiver}</td>
             <td>₩{value.amount}</td>
