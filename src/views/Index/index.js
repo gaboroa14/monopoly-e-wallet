@@ -85,8 +85,8 @@ const Index = () => {
       Swal.close();
       history.push(
         JSON.parse(localStorage.getItem("user")).avatar === "bank"
-          ? "/bank"
-          : "/game"
+          ? "/monopoly-e-wallet/bank"
+          : "/monopoly-e-wallet/game"
       );
     });
   }, []);
