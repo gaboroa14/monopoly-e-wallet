@@ -8,14 +8,16 @@ import config from "../../config";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import BottomButtons from "../../components/BottomButtons";
+import Spinner from "../../components/Spinner";
 
 let socket;
 
 const WinnerWinnerChickenDinner = () => {
   let history = useHistory();
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [user] = useState(JSON.parse(localStorage.getItem("user")));
   const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { winner } = useParams();
 
@@ -25,10 +27,9 @@ const WinnerWinnerChickenDinner = () => {
   useEffect(() => {
     console.log("conecte");
     socket = io(config.ENDPOINT);
-    const u = JSON.parse(localStorage.getItem("user"));
     socket.emit(
       "join",
-      { username: u.username, room_id: u.room._id },
+      { username: user.username, room_id: user.room._id },
       ({ error, user, quantity }) => {
         if (user) {
           localStorage.setItem("user", JSON.stringify(user));
@@ -52,6 +53,7 @@ const WinnerWinnerChickenDinner = () => {
         };
       });
       setUsers(response);
+      setIsLoading(false);
     });
   }, []);
 
@@ -71,11 +73,13 @@ const WinnerWinnerChickenDinner = () => {
     <section className="section is-centered">
       <div className="container is-centered has-text-centered">
         <Logo mb="2" />
-        <h1 className="title is-2">FIN DEL JUEGO</h1>
-        <h1 className="title is-3">{winner} es el ganador</h1>
-        <PlayerGroup players={users} winner={winner} />
-
-        <BottomButtons {...buttons} />
+        <Spinner isLoading={isLoading}/>
+        <div style={{ visibility: isLoading ? "hidden" : "visible" }}>
+          <h1 className="title is-2">FIN DEL JUEGO</h1>
+          <h1 className="title is-3">{winner} es el ganador</h1>
+          <PlayerGroup players={users} winner={winner} />
+          <BottomButtons {...buttons} />
+        </div>
       </div>
     </section>
   );

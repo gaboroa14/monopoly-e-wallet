@@ -19,9 +19,11 @@ let socket;
 const SendMoney = () => {
   let history = useHistory();
 
-  let currentUser = JSON.parse(localStorage.getItem("user"));
+  const [myUser, setMyUser] = useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
 
-  if (!currentUser) history.push("/monopoly-e-wallet/");
+  if (!myUser) history.push("/monopoly-e-wallet/");
 
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {
@@ -33,8 +35,6 @@ const SendMoney = () => {
   }, []);
 
   const { user, bank } = useParams();
-
-  const saldoActual = "1.000";
 
   const [monto, setMonto] = useState("");
   const [hasComma, setHasComma] = useState(false);
@@ -84,8 +84,27 @@ const SendMoney = () => {
     //2) Valida que el usuario haya introducido un monto.
     //3) Envía el dinero al usuario (backend)
     //4) Devuelve al menú principal
-    if (!bank && monto > JSON.parse(localStorage.getItem("user")).amount) {
-      Swal.fire("te falta cobre");
+    if (!bank && monto > myUser.amount) {
+      toast.error("Monto insuficiente.", {
+        position: "top-right",
+        autoClose: 3500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    } else if (parseInt(monto) === 0) {
+      toast.error("Introduzca un monto válido.", {
+        position: "top-right",
+        autoClose: 3500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
     if (monto.length !== 0) {
@@ -99,9 +118,9 @@ const SendMoney = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           socket.emit("send-transaction", {
-            user_id: JSON.parse(localStorage.getItem("user"))._id,
+            user_id: myUser._id,
             amount: monto,
-            room_id: JSON.parse(localStorage.getItem("user")).room._id,
+            room_id: myUser.room._id,
             to_user: user,
           });
           Swal.fire({
@@ -109,6 +128,9 @@ const SendMoney = () => {
             confirmButtonColor: "#71945B",
             confirmButtonText: "Aceptar",
           });
+          myUser.amount -= monto;
+          localStorage.setItem("user", JSON.stringify(myUser));
+          setMyUser(myUser);
           setTimeout(() => handleBackButtonClick(), 500);
         }
       });
@@ -125,7 +147,8 @@ const SendMoney = () => {
     }
   };
 
-  const handleBackButtonClick = () => history.push(bank ? "/monopoly-e-wallet/bank" : "/monopoly-e-wallet/game");
+  const handleBackButtonClick = () =>
+    history.push(bank ? "/monopoly-e-wallet/bank" : "/monopoly-e-wallet/game");
 
   const buttons = {
     leftButton: {
@@ -153,7 +176,7 @@ const SendMoney = () => {
               <strong className="mr-2">
                 {bank ? `Saldo de ${user}:` : "Tu saldo es:"}
               </strong>{" "}
-              ₩{saldoActual}
+              ₩{myUser.amount}
             </div>
           </div>
         </div>

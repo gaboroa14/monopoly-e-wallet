@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faSadTear } from "@fortawesome/free-solid-svg-icons";
-import { ClapSpinner } from "react-spinners-kit";
+import Spinner from "../../components/Spinner";
 
 let socket;
 
@@ -111,19 +111,7 @@ const Bankrupt = () => {
   return (
     <section className="section is-centered">
       <div className="container has-text-black has-text-centered">
-        <div
-          className="box is-centered has-text-centered"
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 100,
-            visibility: isLoading ? "visible" : "hidden",
-          }}
-        >
-          <ClapSpinner loading={isLoading} />
-        </div>
+      <Spinner isLoading={isLoading}/>
         <Logo mb="2" />
         <h1 class="title is-3" style={{ marginBottom: "-0.5rem" }}>
           ¿Quién te llevó a la bancarrota?

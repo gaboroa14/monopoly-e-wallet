@@ -14,7 +14,7 @@ import { io } from "socket.io-client";
 import config from "../../config";
 import Button from "../../components/Button";
 import { toast } from "react-toastify";
-import { ClapSpinner } from "react-spinners-kit";
+import Spinner from "../../components/Spinner";
 
 let socket;
 
@@ -209,19 +209,7 @@ const Bank = () => {
     <section className="section is-centered">
       <div className="container">
         <Logo />
-        <div
-          className="box is-centered has-text-centered"
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 100,
-            visibility: isLoading ? "visible" : "hidden",
-          }}
-        >
-          <ClapSpinner loading={isLoading} />
-        </div>
+        <Spinner isLoading={isLoading}/>
         <div style={{ visibility: isLoading ? "hidden" : "visible" }}>
           <Button
             action={() => {

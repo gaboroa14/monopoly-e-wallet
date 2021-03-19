@@ -8,7 +8,8 @@ import Swal from "sweetalert2";
 import config from "../../config";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import { ClapSpinner } from "react-spinners-kit";
+import Spinner from "../../components/Spinner";
+
 
 let socket;
 
@@ -44,12 +45,16 @@ const History = () => {
   useEffect(() => {
     socket.emit("get-transactions", user.room._id, (response) => {
       response = response.map((value, index) => {
+        let creationDate = new Date(value.createdAt);
+        let creationHour = (creationDate.getHours() % 12).toString();
+        let creationMin = creationDate.getMinutes();
+        let amPm = parseInt(creationDate.getHours() / 12) === 1 ? 'pm' : 'am';
         return {
           type: value.type === "e" ? "Envío" : "Cobro",
           sender: value.username,
           receiver: value.to_user,
           amount: value.amount,
-          hour: value.createdAt,
+          hour: `${creationHour}:${creationMin} ${amPm}`,
         };
       });
       setTransactions(response);
@@ -77,19 +82,7 @@ const History = () => {
     <section className="section is-centered has-text-centered">
       <div className="container is-centered has-text-centered">
         <Logo mb="0" />
-        <div
-          className="box is-centered has-text-centered"
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 100,
-            visibility: isLoading ? "visible" : "hidden",
-          }}
-        >
-          <ClapSpinner loading={isLoading} />
-        </div>
+        <Spinner isLoading={isLoading}/>
         <div
           className="is-centered has-text-centered"
           style={{

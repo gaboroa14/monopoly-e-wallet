@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
 import config from "../../config";
+import Spinner from "../../components/Spinner";
 
 let socket;
 
@@ -15,6 +16,8 @@ const Index = () => {
   const [playerName, setPlayerName] = useState(
     Math.random().toString(36).substr(2, 4)
   );
+
+  const [isLoading, setIsLoading] = useState(false);
 
   let history = useHistory();
 
@@ -108,11 +111,13 @@ const Index = () => {
   const handleCreateClick = () => {
     // Conectar con el backend para crear una sala.
     // Devuelve un objeto de tipo user que se guarda en localStorage.
+    setIsLoading(true);
 
     if (!validateField()) return;
 
     socket.emit("create-room", playerName.toUpperCase(), ({ user, quantity, error }) => {
       localStorage.setItem("user", JSON.stringify(user));
+      setIsLoading(false);
       Swal.fire({
         title: `El código de la sala es: ${user.room._id}`,
         text: `Esperando jugadores. 1 persona se ha unido.`,
@@ -176,6 +181,7 @@ const Index = () => {
           confirmButtonText: "Aceptar",
         });
       } else {
+        setIsLoading(true);
         socket.emit(
           "join",
           { username: playerName.toUpperCase(), room_id: result.value },
@@ -188,6 +194,7 @@ const Index = () => {
               });
               return;
             }
+            setIsLoading(false);
             localStorage.setItem("user", JSON.stringify(user));
             Swal.fire({
               title: `El código de la sala es: ${result.value.toUpperCase()}`,
@@ -219,6 +226,7 @@ const Index = () => {
     >
       <div className="container">
         <Logo mb="6" />
+        <Spinner isLoading={isLoading}/>
         <PlayerName
           name={playerName}
           onTextChange={(e) => setPlayerName(e.target.value)}

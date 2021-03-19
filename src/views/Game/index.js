@@ -8,12 +8,13 @@ import {
   faSadCry,
   faAirFreshener,
   faHome,
+  faBookDead,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import config from "../../config";
 import Button from "../../components/Button";
 import { toast } from "react-toastify";
-import { ClapSpinner } from "react-spinners-kit";
+
 
 let socket;
 
@@ -177,19 +178,7 @@ const Game = () => {
     <section className="section is-centered">
       <div className="container">
         <Logo />
-        <div
-          className="box is-centered has-text-centered"
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 100,
-            visibility: isLoading ? "visible" : "hidden",
-          }}
-        >
-          <ClapSpinner loading={isLoading} />
-        </div>
+
         <div style={{ visibility: isLoading ? "hidden" : "visible" }}>
           <PlayerGroup players={users} key="0" />
         </div>
@@ -216,7 +205,7 @@ const Game = () => {
                     }
               }
             >
-              <FontAwesomeIcon icon={user.amount !== 0 ? faSadCry : faHome} />
+              <FontAwesomeIcon icon={user.amount !== 0 ? faBookDead : faHome} />
             </div>
           </div>
         </div>
