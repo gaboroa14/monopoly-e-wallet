@@ -21,9 +21,9 @@ const Index = () => {
     JSON.parse(localStorage.getItem("user"))?.room.init &&
     JSON.parse(localStorage.getItem("user")).avatar === "bank"
   ) {
-    history.push("/bank");
+    history.push("/monopoly-e-wallet/bank");
   } else if (JSON.parse(localStorage.getItem("user"))?.room.init) {
-    history.push("/game");
+    history.push("/monopoly-e-wallet/game");
   }
 
   // CONEXIÓN CON EL BACKEND

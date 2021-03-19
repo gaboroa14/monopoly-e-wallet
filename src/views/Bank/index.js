@@ -22,8 +22,8 @@ const Bank = () => {
 
   let user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) history.push("/monopoly-e-wallet");
-  else if (user.avatar !== "bank") history.push("/game");
+  if (!user) history.push("/monopoly-e-wallet/");
+  else if (user.avatar !== "bank") history.push("/monopoly-e-wallet/game");
 
   const [users, setUsers] = useState([]);
 
@@ -129,7 +129,7 @@ const Bank = () => {
   };
 
   const handleHistoryClick = () => {
-    history.push("/history/");
+    history.push("/monopoly-e-wallet/history/");
   };
 
   const handleFinishGameClick = () => {
@@ -156,7 +156,7 @@ const Bank = () => {
               confirmButtonColor: "#71945B",
               confirmButtonText: "Aceptar",
             });
-            history.push("/winner");
+            history.push("/monopoly-e-wallet/winner");
           } else if (result.isDismissed) {
             Swal.fire({
               title: "¡Han rechazado el fin del juego!",

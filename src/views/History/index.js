@@ -17,8 +17,8 @@ const History = () => {
 
   let user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) history.push("/monopoly-e-wallet");
-  else if (user.avatar !== "bank") history.push("/game");
+  if (!user) history.push("/monopoly-e-wallet/");
+  else if (user.avatar !== "bank") history.push("/monopoly-e-wallet/game");
 
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {
@@ -88,7 +88,7 @@ const History = () => {
   const buttons = {
     leftButton: {
       text: <FontAwesomeIcon icon={faAngleLeft} />,
-      action: () => history.push("/bank"),
+      action: () => history.push("/monopoly-e-wallet/bank"),
     },
     rightButton: {
       text: <FontAwesomeIcon icon={faReceipt} />,

@@ -23,7 +23,7 @@ const WithdrawMoney = () => {
 
   let currentUser = JSON.parse(localStorage.getItem("user"));
 
-  if (!currentUser) history.push("/monopoly-e-wallet");
+  if (!currentUser) history.push("/monopoly-e-wallet/");
 
   // CONECTO CON EL BACKEND
   useEffect(() => {
@@ -129,7 +129,7 @@ const WithdrawMoney = () => {
     }
   };
 
-  const handleBackButtonClick = () => history.push("/bank");
+  const handleBackButtonClick = () => history.push("/monopoly-e-wallet/bank");
 
   const buttons = {
     leftButton: {

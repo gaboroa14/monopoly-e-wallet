@@ -21,7 +21,7 @@ const SendMoney = () => {
 
   let currentUser = JSON.parse(localStorage.getItem("user"));
 
-  if (!currentUser) history.push("/monopoly-e-wallet");
+  if (!currentUser) history.push("/monopoly-e-wallet/");
 
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {

@@ -15,31 +15,34 @@ function App() {
   return (
     <Router>
       <Switch>
+        <Route path="/">
+          <Index />
+        </Route>
         <Route path="/monopoly-e-wallet/" exact>
           <Index />
         </Route>
-        <Route path="/game/" exact>
+        <Route path="/monopoly-e-wallet/game/" exact>
           <Game />
         </Route>
-        <Route path="/send/:user/:bank?">
+        <Route path="/monopoly-e-wallet/send/:user/:bank?">
           <SendMoney />
         </Route>
-        <Route path="/bankrupt/" exact>
+        <Route path="/monopoly-e-wallet/bankrupt/" exact>
           <Bankrupt />
         </Route>
-        <Route path="/bank/" exact>
+        <Route path="/monopoly-e-wallet/bank/" exact>
           <Bank />
         </Route>
-        <Route path="/gameover/" exact>
+        <Route path="/monopoly-e-wallet/gameover/" exact>
           <GameOver />
         </Route>
-        <Route path="/winner/" exact>
+        <Route path="/monopoly-e-wallet/winner/" exact>
           <WinnerWinnerChickenDinner />
         </Route>
-        <Route path="/withdraw/:user" exact>
+        <Route path="/monopoly-e-wallet/withdraw/:user" exact>
           <WithdrawMoney />
         </Route>
-        <Route path="/history/" exact>
+        <Route path="/monopoly-e-wallet/history/" exact>
           <History />
         </Route>
       </Switch>

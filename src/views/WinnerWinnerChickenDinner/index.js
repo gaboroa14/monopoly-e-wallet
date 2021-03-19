@@ -9,7 +9,7 @@ const WinnerWinnerChickenDinner = () => {
 
     let user = JSON.parse(localStorage.getItem("user"));
 
-    if (!user) history.push("/monopoly-e-wallet");
+    if (!user) history.push("/monopoly-e-wallet/");
     
   const handleHomeButtonClick = () => {
     history.push("/monopoly-e-wallet/");

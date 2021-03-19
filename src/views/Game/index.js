@@ -18,8 +18,8 @@ const Game = () => {
   let user = JSON.parse(localStorage.getItem("user"));
   const [users, setUsers] = useState([]);
 
-  if (!user) history.push("/monopoly-e-wallet");
-  else if (user.avatar === "bank") history.push("/bank");
+  if (!user) history.push("/monopoly-e-wallet/");
+  else if (user.avatar === "bank") history.push("/monopoly-e-wallet/bank");
 
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {
