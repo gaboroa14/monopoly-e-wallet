@@ -110,7 +110,7 @@ const Game = () => {
   };
 
   const handleSendingMoney = (user) => {
-    history.push(`/send/${user}`);
+    history.push(`/monopoly-e-wallet/send/${user}`);
   };
 
   return (

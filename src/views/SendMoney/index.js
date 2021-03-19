@@ -125,7 +125,7 @@ const SendMoney = () => {
     }
   };
 
-  const handleBackButtonClick = () => history.push(bank ? "/bank" : "/game");
+  const handleBackButtonClick = () => history.push(bank ? "/monopoly-e-wallet/bank" : "/monopoly-e-wallet/game");
 
   const buttons = {
     leftButton: {

@@ -121,11 +121,11 @@ const Bank = () => {
   };
 
   const handleWithdrawingMoney = (user) => {
-    history.push(`/withdraw/${user}`);
+    history.push(`/monopoly-e-wallet/withdraw/${user}`);
   };
 
   const handleSendingMoney = (user) => {
-    history.push(`/send/${user}/t`);
+    history.push(`/monopoly-e-wallet/send/${user}/t`);
   };
 
   const handleHistoryClick = () => {
