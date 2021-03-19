@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/monopoly-e-wallet/static/css/main.a2fbc50c.chunk.css",
-    "main.js": "/monopoly-e-wallet/static/js/main.573c607d.chunk.js",
-    "main.js.map": "/monopoly-e-wallet/static/js/main.573c607d.chunk.js.map",
+    "main.js": "/monopoly-e-wallet/static/js/main.baff82e4.chunk.js",
+    "main.js.map": "/monopoly-e-wallet/static/js/main.baff82e4.chunk.js.map",
     "runtime-main.js": "/monopoly-e-wallet/static/js/runtime-main.55d58d32.js",
     "runtime-main.js.map": "/monopoly-e-wallet/static/js/runtime-main.55d58d32.js.map",
     "static/css/2.3f6a4e7d.chunk.css": "/monopoly-e-wallet/static/css/2.3f6a4e7d.chunk.css",
@@ -24,6 +24,6 @@
     "static/css/2.3f6a4e7d.chunk.css",
     "static/js/2.bee994c9.chunk.js",
     "static/css/main.a2fbc50c.chunk.css",
-    "static/js/main.573c607d.chunk.js"
+    "static/js/main.baff82e4.chunk.js"
   ]
 }
