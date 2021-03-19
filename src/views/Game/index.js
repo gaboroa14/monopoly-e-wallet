@@ -1,10 +1,14 @@
 import Logo from "../../components/Logo";
 import Swal from "sweetalert2";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory, Link, Redirect } from "react-router-dom";
 import PlayerGroup from "../../components/PlayerGroup";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
-import { faSadCry, faAirFreshener } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSadCry,
+  faAirFreshener,
+  faHome,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import config from "../../config";
 import Button from "../../components/Button";
@@ -15,7 +19,7 @@ let socket;
 const Game = () => {
   let history = useHistory();
 
-  let user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [users, setUsers] = useState([]);
 
   if (!user) history.push("/monopoly-e-wallet/");
@@ -40,6 +44,13 @@ const Game = () => {
     };
   }, []);
 
+  const personaQuebrada = () => {
+    Swal.fire({
+      title: "¡Esta persona está quebrada!",
+      confirmButtonText: "Esito",
+    });
+  };
+
   // OBTENER LOS USUARIOS POR PRIMERA VEZ
   useEffect(() => {
     socket.emit("get-users", user?.room._id, (response) => {
@@ -51,6 +62,8 @@ const Game = () => {
           action:
             JSON.parse(localStorage.getItem("user")).username === item.username
               ? showCurrentAmount
+              : item.amount === 0
+              ? personaQuebrada
               : () => handleSendingMoney(item.username),
         };
       });
@@ -78,19 +91,34 @@ const Game = () => {
     });
   }, []);
 
+  // ESCUCHAR LAS BANCARROTAS DE CARGA
+  useEffect(() => {
+    socket.on("bankrupted", (person) => {
+      toast.dark(`¡${person} ha quebrado!`);
+    });
+  }, []);
+
+  // ESCUCHAR SI ALGUIEN GANÓ
+  useEffect(() => {
+    socket.on("winner-player", (response) => {
+      history.push(`/monopoly-e-wallet/winner/${response.username}`);
+    });
+  }, []);
+
   // ESCUCHAR LAS ACTUALIZACIONES EN LOS USUARIOS
   useEffect(() => {
     socket.on("users-list", (response) => {
       console.log(response);
-      user = response.find(
-        (item) => item._id == JSON.parse(localStorage.getItem("user"))._id
+      setUser(
+        response.find(
+          (item) => item._id == JSON.parse(localStorage.getItem("user"))._id
+        )
       );
       localStorage.setItem("user", JSON.stringify(user));
       response = response.map((item) => {
         return {
           username: item.username,
           avatar: item.avatar,
-          amount: item.amount,
           action:
             JSON.parse(localStorage.getItem("user")).username === item.username
               ? showCurrentAmount
@@ -103,14 +131,21 @@ const Game = () => {
 
   const showCurrentAmount = () => {
     Swal.fire({
-      title: `Su saldo es ₩${user.amount}`,
+      title: user.amount !== 0 ? `Su saldo es ₩${user.amount}` : "Estás en la quiebra.",
       confirmButtonColor: "#71945B",
       confirmButtonText: "Aceptar",
     });
   };
 
-  const handleSendingMoney = (user) => {
-    history.push(`/monopoly-e-wallet/send/${user}`);
+  const handleSendingMoney = (who) => {
+    if (user.amount === 0) {
+      Swal.fire({
+        title: "¡Estás quebrado! No puedes enviar dinero.",
+        confirmButtonText: "Chale",
+      });
+      return;
+    }
+    history.push(`/monopoly-e-wallet/send/${who}`);
   };
 
   return (
@@ -128,11 +163,19 @@ const Game = () => {
             text={<FontAwesomeIcon icon={faAirFreshener} />}
           />
           <div className="column is-12">
-            <Link to="/bankrupt/">
-              <div className="box is-size-1 has-text-black">
-                <FontAwesomeIcon icon={faSadCry} />
-              </div>
-            </Link>
+            <div
+              className="box is-size-1 has-text-black"
+              onClick={
+                user.amount !== 0
+                  ? () => history.push("/monopoly-e-wallet/bankrupt")
+                  : () => {
+                    localStorage.removeItem("user");
+                    history.push("/monopoly-e-wallet/")
+                  }
+              }
+            >
+              <FontAwesomeIcon icon={user.amount !== 0 ? faSadCry : faHome} />
+            </div>
           </div>
         </div>
       </div>

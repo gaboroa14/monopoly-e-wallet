@@ -12,7 +12,9 @@ import config from "../../config";
 let socket;
 
 const Index = () => {
-  const [playerName, setPlayerName] = useState(Math.random().toString(36).substr(2,4));
+  const [playerName, setPlayerName] = useState(
+    Math.random().toString(36).substr(2, 4)
+  );
 
   let history = useHistory();
 
@@ -109,7 +111,7 @@ const Index = () => {
 
     if (!validateField()) return;
 
-    socket.emit("create-room", playerName, ({user, quantity, error}) => {
+    socket.emit("create-room", playerName, ({ user, quantity, error }) => {
       localStorage.setItem("user", JSON.stringify(user));
       Swal.fire({
         title: `El código de la sala es: ${user.room._id}`,
@@ -133,12 +135,13 @@ const Index = () => {
             if (result.isConfirmed) {
               socket.emit(
                 "begin-game",
-                JSON.parse(localStorage.getItem("user")).room._id, (error) => {
+                JSON.parse(localStorage.getItem("user")).room._id,
+                (error) => {
                   if (error)
-                  Swal.fire({
-                    title: `Error: ${error}`,
-                    icon: 'warning'
-                  })
+                    Swal.fire({
+                      title: `Error: ${error}`,
+                      icon: "warning",
+                    });
                 }
               );
             }

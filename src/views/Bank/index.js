@@ -49,7 +49,23 @@ const Bank = () => {
   // ESCUCHAR LAS TRANSACCIONES
   useEffect(() => {
     socket.on("transaction", (res) => {
-      toast.dark(`${res.username} le ha enviado ₩${res.amount} a ${res.to_user}`);
+      toast.dark(
+        `${res.username} le ha enviado ₩${res.amount} a ${res.to_user}`
+      );
+    });
+  }, []);
+
+  // ESCUCHAR LAS BANCARROTAS DE CARGA
+  useEffect(() => {
+    socket.on("bankrupted", (person) => {
+      toast.dark(`¡${person} ha quebrado!`);
+    });
+  }, []);
+
+  // ESCUCHAR SI ALGUIEN GANÓ
+  useEffect(() => {
+    socket.on("winner-player", (response) => {
+      history.push(`/monopoly-e-wallet/winner/${response.username}`);
     });
   }, []);
 
@@ -65,7 +81,7 @@ const Bank = () => {
       });
       setUsers(response);
     });
-  }
+  };
 
   // OBTENIENDO USUARIOS POR PRIMERA VEZ
   useEffect(() => {
@@ -81,7 +97,10 @@ const Bank = () => {
           username: item.username,
           avatar: item.avatar,
           amount: item.amount,
-          action: () => showBankerOptions(item.username),
+          action: item.amount !== 0 ? () => showBankerOptions(item.username) : () => Swal.fire({
+            title: "¡Este jugador está quebrado!",
+            confirmButtonText: "Chale"
+          }),
         };
       });
       setUsers(response);

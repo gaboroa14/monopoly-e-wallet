@@ -5,6 +5,7 @@ import {
   faShip,
   faCar,
   faQuestion,
+  faUniversity,
 } from "@fortawesome/free-solid-svg-icons";
 
 const { FontAwesomeIcon } = require("@fortawesome/react-fontawesome");
@@ -39,6 +40,10 @@ const Player = ({
 
     case "car":
       ico = faCar;
+      break;
+
+    case "university":
+      ico = faUniversity;
       break;
 
     default:
@@ -77,11 +82,11 @@ const Player = ({
         </div>
       </header>
       <div className="card-image is-128x128 has-text-black is-size-1">
-        <FontAwesomeIcon icon={ico}/>
+        <FontAwesomeIcon icon={ico} />
       </div>
       <footer className="card-footer">
         <p className="card-footer-item has-text-black is-centered">
-          {amount !== "null" ? `₩ ${amount}` : undefined}
+          {amount && amount!==0 ? `₩ ${amount}` : amount===0 ? "¡Quebrado!" : undefined}
         </p>
       </footer>
     </div>

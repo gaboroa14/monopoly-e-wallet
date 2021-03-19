@@ -33,7 +33,7 @@ function App() {
         <Route path="/monopoly-e-wallet/gameover/" >
           <GameOver />
         </Route>
-        <Route path="/monopoly-e-wallet/winner/" >
+        <Route path="/monopoly-e-wallet/winner/:winner" >
           <WinnerWinnerChickenDinner />
         </Route>
         <Route path="/monopoly-e-wallet/withdraw/:user" >

@@ -8,7 +8,11 @@ const PlayerGroup = ({ players, winner }) => {
           // eslint-disable-next-line
           players.map((value, index) => {
             if (winner) {
-              if (index === 1 || index === 2)
+              if ( value &&
+                ((index === 0 && value.avatar !== "bank") ||
+                index === 1 ||
+                index === 2)
+              )
                 return (
                   <div key={index} className="column is-6">
                     <Player
@@ -18,7 +22,11 @@ const PlayerGroup = ({ players, winner }) => {
                     />
                   </div>
                 );
-            } else if (index === 1 || index === 2)
+            } else if ( value && (
+              (index === 0 && value.avatar !== "bank") ||
+              index === 1 ||
+              index === 2
+            ))
               return (
                 <div key={index} className="column is-6">
                   <Player {...value} />
