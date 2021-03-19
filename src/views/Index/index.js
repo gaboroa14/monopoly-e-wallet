@@ -222,7 +222,7 @@ const Index = () => {
   return (
     <section
       className="section is-centered has-background-danger"
-      style={{ height: "100%" }}
+      style={{ height: "100% !important" }}
     >
       <div className="container">
         <Logo mb="6" />
@@ -246,9 +246,6 @@ const Index = () => {
           />
         </div>
         <Footer />
-      </div>
-      <div className="hero has-background-danger">
-        <div className="hero-body"></div>
       </div>
     </section>
   );
