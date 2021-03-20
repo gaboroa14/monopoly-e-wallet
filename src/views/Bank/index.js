@@ -7,12 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAddressBook,
   faHourglassEnd,
-  faAirFreshener,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import config from "../../config";
-import Button from "../../components/Button";
 import { toast } from "react-toastify";
 import Spinner from "../../components/Spinner";
 
@@ -60,7 +58,7 @@ const Bank = () => {
   // ESCUCHAR LAS BANCARROTAS DE CARGA
   useEffect(() => {
     socket.on("bankrupted", (person) => {
-      toast.dark(`¡${person} ha quebrado!`);
+      toast.error(`¡${person} ha quebrado!`);
     });
   }, []);
 
@@ -71,8 +69,22 @@ const Bank = () => {
     });
   }, []);
 
+  // ESCUCHAR SI RECHAZAN LA SOLICITUD DE FINALIZAR PARTIDA
+  useEffect(() => {
+    socket.on("reject-request", (qty) => {
+      Swal.close();
+      toast.warn("¡Se ha rechazado la solicitud de finalizar la partida!");
+    });
+  }, []);
+
   const pedirUsuarios = () => {
     socket.emit("get-users", user?.room._id, (response) => {
+      if (!response) {
+        localStorage.removeItem("user");
+        history.push("/monopoly-e-wallet/");
+        toast.info("¡Esta partida ha finalizado!");
+        return;
+      }
       response = response.map((item) => {
         return {
           username: item.username,
@@ -107,6 +119,7 @@ const Bank = () => {
                   Swal.fire({
                     title: "¡Este jugador está quebrado!",
                     confirmButtonText: "Chale",
+                    confirmButtonColor: "#71945B",
                   }),
         };
       });
@@ -122,8 +135,8 @@ const Bank = () => {
       showCancelButton: true,
       denyButtonColor: "#B85B28",
       confirmButtonText: `Pass Go`,
-      denyButtonText: `Cobrar`,
-      cancelButtonText: "Pagar",
+      denyButtonText: `Pagar o Cobrar`,
+      cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
         socket.emit("send-transaction", {
@@ -139,9 +152,19 @@ const Bank = () => {
         });
         pedirUsuarios();
       } else if (result.isDenied) {
-        handleWithdrawingMoney(user);
-      } else if (result.isDismissed) {
-        handleSendingMoney(user);
+        Swal.fire({
+          title: "Elija una opción.",
+          showCloseButton: true,
+          showCancelButton: true,
+          denyButtonColor: "#B85B28",
+          confirmButtonText: `Pagar`,
+          denyButtonText: `Cobrar`,
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) handleSendingMoney(user);
+          if (result.isDenied) handleWithdrawingMoney(user);
+
+        });
       }
     });
   };
@@ -168,29 +191,13 @@ const Bank = () => {
       showCancelButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
+        socket.emit("end-game", user.room._id, true);
         Swal.fire({
           title: "Esperando confirmación.",
-          confirmButtonColor: "#71945B",
-          confirmButtonText: "Sí",
-          cancelButtonColor: "#B85B28",
-          cancelButtonText: "No",
-          showCancelButton: true,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            Swal.fire({
-              title: "Partida finalizada con éxito",
-              confirmButtonColor: "#71945B",
-              confirmButtonText: "Aceptar",
-            });
-            history.push("/monopoly-e-wallet/winner");
-          } else if (result.isDismissed) {
-            Swal.fire({
-              title: "¡Han rechazado el fin del juego!",
-              confirmButtonColor: "#71945B",
-              confirmButtonText: "Aceptar",
-            });
-          }
+          showConfirmButton: false,
+          showCancelButton: false,
         });
+        Swal.showLoading();
       }
     });
   };
@@ -209,15 +216,8 @@ const Bank = () => {
     <section className="section is-centered">
       <div className="container">
         <Logo />
-        <Spinner isLoading={isLoading}/>
+        <Spinner isLoading={isLoading} />
         <div style={{ visibility: isLoading ? "hidden" : "visible" }}>
-          <Button
-            action={() => {
-              localStorage.removeItem("user");
-              history.push("/monopoly-e-wallet/");
-            }}
-            text={<FontAwesomeIcon icon={faAirFreshener} />}
-          />
           <PlayerGroup players={users} />
           <BottomButtons {...buttons} />
         </div>

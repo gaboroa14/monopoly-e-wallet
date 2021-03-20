@@ -44,6 +44,29 @@ const WithdrawMoney = () => {
     };
   }, []);
 
+  // ESCUCHAR LAS TRANSACCIONES
+  useEffect(() => {
+    socket.on("transaction", (res) => {
+      toast.dark(
+        `${res.username} le ha enviado ₩${res.amount} a ${res.to_user}`
+      );
+    });
+  }, []);
+
+  // ESCUCHAR LAS BANCARROTAS DE CARGA
+  useEffect(() => {
+    socket.on("bankrupted", (person) => {
+      toast.error(`¡${person} ha quebrado!`);
+    });
+  }, []);
+
+  // ESCUCHAR SI ALGUIEN GANÓ
+  useEffect(() => {
+    socket.on("winner-player", (response) => {
+      history.push(`/monopoly-e-wallet/winner/${response.username}`);
+    });
+  }, []);
+
   const { user } = useParams();
   const saldoActual = "1.000";
 

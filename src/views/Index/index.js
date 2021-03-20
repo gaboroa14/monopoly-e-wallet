@@ -13,9 +13,7 @@ import Spinner from "../../components/Spinner";
 let socket;
 
 const Index = () => {
-  const [playerName, setPlayerName] = useState(
-    Math.random().toString(36).substr(2, 4)
-  );
+  const [playerName, setPlayerName] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -76,6 +74,7 @@ const Index = () => {
       Swal.fire({
         title: "Se ha cerrado la sala.",
         confirmButtonText: "Aceptar",
+        confirmButtonColor: "#71945B",
       });
       localStorage.removeItem("user");
     });
@@ -102,6 +101,7 @@ const Index = () => {
       Swal.fire({
         title: "¡Debes introducir un nombre!",
         confirmButtonText: "Aceptar",
+        confirmButtonColor: "#71945B",
       });
       return false;
     } else return true;
@@ -191,6 +191,7 @@ const Index = () => {
                 title: `Error: ${error}`,
                 confirmButtonText: "Aceptar",
                 icon: "warning",
+                confirmButtonColor: "#71945B",
               });
               return;
             }

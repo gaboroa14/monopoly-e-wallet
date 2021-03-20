@@ -1,6 +1,6 @@
-import { ClapSpinner, FireworkSpinner, GooSpinner, RingSpinner, JellyfishSpinner } from "react-spinners-kit";
+import { JellyfishSpinner } from "react-spinners-kit";
 
-const Spinner = ({isLoading}) => (
+const Spinner = ({ isLoading }) => (
   <div
     className="box is-centered has-text-centered"
     style={{
@@ -12,7 +12,7 @@ const Spinner = ({isLoading}) => (
       visibility: isLoading ? "visible" : "hidden",
     }}
   >
-    <JellyfishSpinner loading={isLoading} />
+    <JellyfishSpinner loading={isLoading} color="#7E0000" />
   </div>
 );
 

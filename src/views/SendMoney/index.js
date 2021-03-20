@@ -25,6 +25,24 @@ const SendMoney = () => {
 
   if (!myUser) history.push("/monopoly-e-wallet/");
 
+  // ESCUCHAR LAS TRANSACCIONES
+  useEffect(() => {
+    socket.on("transaction", (res) => {
+      if (user.avatar === "bank")
+        toast.dark(
+          `${res.username} le ha enviado ₩${res.amount} a ${res.to_user}`
+        );
+      else {
+        const myUser = JSON.parse(localStorage.getItem("user"));
+        if (res.to_user === myUser.username) {
+          toast.dark(`${res.username} te ha enviado ₩${res.amount}`);
+        }
+        myUser.amount += res.amount;
+        localStorage.setItem("user", JSON.stringify(myUser));
+      }
+    });
+  }, []);
+
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {
     socket = io(config.ENDPOINT);
@@ -32,6 +50,125 @@ const SendMoney = () => {
       //socket.emit("disconnect");
       socket.off();
     };
+  }, []);
+
+  // ESCUCHAR SI ALGUIEN GANÓ
+  useEffect(() => {
+    socket.on("winner-player", (response) => {
+      history.push(`/monopoly-e-wallet/winner/${response.username}`);
+    });
+  }, []);
+
+  // ESCUCHAR LAS TRANSACCIONES DE CARGA
+  useEffect(() => {
+    socket.on("transaction", (res) => {
+      const myUser = JSON.parse(localStorage.getItem("user"));
+      if (res.to_user === myUser.username) {
+        toast.dark(`${res.username} te ha enviado ₩${res.amount}`);
+      }
+      myUser.amount += res.amount;
+      localStorage.setItem("user", JSON.stringify(myUser));
+    });
+  }, []);
+
+  // ESCUCHAR LAS TRANSACCIONES DE COBRO
+  useEffect(() => {
+    socket.on("debit", (res) => {
+      const myUser = JSON.parse(localStorage.getItem("user"));
+      if (res.to_user === myUser.username) {
+        toast.dark(`El banco te ha cobrado ₩${res.amount}`);
+        myUser.amount -= res.amount;
+        localStorage.setItem("user", JSON.stringify(myUser));
+      }
+    });
+  }, []);
+
+  // ESCUCHAR LAS BANCARROTAS DE CARGA
+  useEffect(() => {
+    socket.on("bankrupted", (person) => {
+      toast.error(`¡${person} ha quebrado!`);
+    });
+  }, []);
+
+  // ESCUCHAR SI ALGUIEN GANÓ
+  useEffect(() => {
+    socket.on("winner-player", (response) => {
+      history.push(`/monopoly-e-wallet/winner/${response.username}`);
+    });
+  }, []);
+
+  // ESCUCHAR SI EL BANQUERO QUIERE FINALIZAR LA PARTIDA
+  useEffect(() => {
+    socket.on("accepted-requests", (qty) => {
+      if (Swal.isVisible()) return;
+      Swal.fire({
+        title: `El banquero quiere finalizar la partida. ¿Finalizar?`,
+        confirmButtonColor: "#71945B",
+        confirmButtonText: "Sí",
+        cancelButtonColor: "#B85B28",
+        cancelButtonText: "No",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          socket.emit("end-game", user.room._id, true, (winner) => {
+            if (winner) history.push(`/monopoly-e-wallet/winner/${winner}`);
+          });
+          Swal.fire({
+            title: "Esperando confirmación.",
+            showConfirmButton: false,
+            showCancelButton: false,
+          });
+          Swal.showLoading();
+        } else {
+          socket.emit("end-game", user.room._id, false);
+        }
+      });
+    });
+  }, []);
+
+  // ESCUCHAR SI RECHAZAN LA SOLICITUD DE FINALIZAR PARTIDA
+  useEffect(() => {
+    socket.on("reject-request", (qty) => {
+      Swal.close();
+      toast.warn("¡Se ha rechazado la solicitud de finalizar la partida!");
+    });
+  }, []);
+
+  // ESCUCHAR SI EL BANQUERO QUIERE FINALIZAR LA PARTIDA
+  useEffect(() => {
+    socket.on("accepted-requests", (qty) => {
+      if (Swal.isVisible()) return;
+      Swal.fire({
+        title: `El banquero quiere finalizar la partida. ¿Finalizar?`,
+        confirmButtonColor: "#71945B",
+        confirmButtonText: "Sí",
+        cancelButtonColor: "#B85B28",
+        cancelButtonText: "No",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          socket.emit("end-game", user.room._id, true, (winner) => {
+            if (winner) history.push(`/monopoly-e-wallet/winner/${winner}`);
+          });
+          Swal.fire({
+            title: "Esperando confirmación.",
+            showConfirmButton: false,
+            showCancelButton: false,
+          });
+          Swal.showLoading();
+        } else {
+          socket.emit("end-game", user.room._id, false);
+        }
+      });
+    });
+  }, []);
+
+  // ESCUCHAR SI RECHAZAN LA SOLICITUD DE FINALIZAR PARTIDA
+  useEffect(() => {
+    socket.on("reject-request", (qty) => {
+      Swal.close();
+      toast.warn("¡Se ha rechazado la solicitud de finalizar la partida!");
+    });
   }, []);
 
   const { user, bank } = useParams();

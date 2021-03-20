@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import BottomButtons from "../../components/BottomButtons";
 import Spinner from "../../components/Spinner";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 let socket;
 
@@ -25,7 +27,7 @@ const WinnerWinnerChickenDinner = () => {
 
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {
-    console.log("conecte");
+    if (Swal.isVisible()) Swal.close();
     socket = io(config.ENDPOINT);
     socket.emit(
       "join",
@@ -45,6 +47,12 @@ const WinnerWinnerChickenDinner = () => {
   // OBTENER LOS USUARIOS POR PRIMERA VEZ
   useEffect(() => {
     socket.emit("get-users", user?.room._id, (response) => {
+      if (!response){
+        localStorage.removeItem("user");
+        history.push("/monopoly-e-wallet/");
+        toast.info("¡Esta partida ha finalizado!");
+        return;
+      }
       response = response.map((item) => {
         return {
           username: item.username,

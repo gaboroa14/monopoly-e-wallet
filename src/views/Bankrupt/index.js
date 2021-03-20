@@ -8,8 +8,9 @@ import config from "../../config";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faSadTear } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../components/Spinner";
+import { toast } from "react-toastify";
 
 let socket;
 
@@ -44,6 +45,12 @@ const Bankrupt = () => {
   // OBTENER LOS USUARIOS POR PRIMERA VEZ
   useEffect(() => {
     socket.emit("get-users", user?.room._id, (response) => {
+      if (!response){
+        localStorage.removeItem("user");
+        history.push("/monopoly-e-wallet/");
+        toast.info("¡Esta partida ha finalizado!");
+        return;
+      }
       response = response
         .filter((item) => item.username !== user.username)
         .map((item) => {
@@ -57,6 +64,7 @@ const Bankrupt = () => {
                     Swal.fire({
                       title: "Esta persona está quebrada.",
                       confirmButtonText: "Chale",
+                      confirmButtonColor: "#71945B",
                     }),
           };
         });
@@ -65,6 +73,8 @@ const Bankrupt = () => {
     });
   }, []);
 
+
+  
   const handleBankruptcy = (who) => {
     Swal.fire({
       title: `¿Estás seguro que te quebró ${who}?`,
@@ -95,6 +105,7 @@ const Bankrupt = () => {
         Swal.fire({
           title: "¡Te fuiste a la quiebra!",
           confirmButtonText: "Chale",
+          confirmButtonColor: "#71945B",
         });
         setTimeout(() => history.push("/monopoly-e-wallet/game/", 1000));
       }

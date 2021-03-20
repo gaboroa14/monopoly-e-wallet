@@ -1,20 +1,14 @@
 import Logo from "../../components/Logo";
 import Swal from "sweetalert2";
-import { useHistory, Link, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import PlayerGroup from "../../components/PlayerGroup";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
-import {
-  faSadCry,
-  faAirFreshener,
-  faHome,
-  faBookDead,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHome, faBookDead } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import config from "../../config";
-import Button from "../../components/Button";
 import { toast } from "react-toastify";
-
+import Spinner from "../../components/Spinner";
 
 let socket;
 
@@ -31,7 +25,7 @@ const Game = () => {
   // CONEXIÓN CON EL BACKEND
   useEffect(() => {
     socket = io(config.ENDPOINT);
-    const u = JSON.parse(localStorage.getItem("user"));
+    const u = user;
     socket.emit(
       "join",
       { username: u.username, room_id: u.room._id },
@@ -51,6 +45,7 @@ const Game = () => {
     Swal.fire({
       title: "¡Esta persona está quebrada!",
       confirmButtonText: "Esito",
+      confirmButtonColor: "#71945B",
     });
   };
 
@@ -65,6 +60,12 @@ const Game = () => {
   // OBTENER LOS USUARIOS POR PRIMERA VEZ
   useEffect(() => {
     socket.emit("get-users", user?.room._id, (response) => {
+      if (!response) {
+        localStorage.removeItem("user");
+        history.push("/monopoly-e-wallet/");
+        toast.info("¡Esta partida ha finalizado!");
+        return;
+      }
       response = response.map((item) => {
         return {
           username: item.username,
@@ -74,7 +75,7 @@ const Game = () => {
               ? item.amount
               : `~${getApproxAmount(item.amount)}`,
           action:
-            JSON.parse(localStorage.getItem("user")).username === item.username
+            user.username === item.username
               ? showCurrentAmount
               : item.amount === 0
               ? personaQuebrada
@@ -113,7 +114,7 @@ const Game = () => {
   // ESCUCHAR LAS BANCARROTAS DE CARGA
   useEffect(() => {
     socket.on("bankrupted", (person) => {
-      toast.dark(`¡${person} ha quebrado!`);
+      toast.error(`¡${person} ha quebrado!`);
     });
   }, []);
 
@@ -124,15 +125,48 @@ const Game = () => {
     });
   }, []);
 
+  // ESCUCHAR SI EL BANQUERO QUIERE FINALIZAR LA PARTIDA
+  useEffect(() => {
+    socket.on("accepted-requests", (qty) => {
+      if (Swal.isVisible()) return;
+      Swal.fire({
+        title: `El banquero quiere finalizar la partida. ¿Finalizar?`,
+        confirmButtonColor: "#71945B",
+        confirmButtonText: "Sí",
+        cancelButtonColor: "#B85B28",
+        cancelButtonText: "No",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          socket.emit("end-game", user.room._id, true, (winner) => {
+            if (winner) history.push(`/monopoly-e-wallet/winner/${winner}`);
+          });
+          Swal.fire({
+            title: "Esperando confirmación.",
+            showConfirmButton: false,
+            showCancelButton: false,
+          });
+          Swal.showLoading();
+        } else {
+          socket.emit("end-game", user.room._id, false);
+        }
+      });
+    });
+  }, []);
+
+  // ESCUCHAR SI RECHAZAN LA SOLICITUD DE FINALIZAR PARTIDA
+  useEffect(() => {
+    socket.on("reject-request", (qty) => {
+      Swal.close();
+      toast.warn("¡Se ha rechazado la solicitud de finalizar la partida!");
+    });
+  }, []);
+
   // ESCUCHAR LAS ACTUALIZACIONES EN LOS USUARIOS
   useEffect(() => {
     socket.on("users-list", (response) => {
       console.log(response);
-      setUser(
-        response.find(
-          (item) => item._id == JSON.parse(localStorage.getItem("user"))._id
-        )
-      );
+      setUser(response.find((item) => item._id == user._id));
       localStorage.setItem("user", JSON.stringify(user));
       response = response.map((item) => {
         return {
@@ -143,7 +177,7 @@ const Game = () => {
               ? item.amount
               : `~${getApproxAmount(item.amount)}`,
           action:
-            JSON.parse(localStorage.getItem("user")).username === item.username
+            user.username === item.username
               ? showCurrentAmount
               : () => handleSendingMoney(item.username),
         };
@@ -168,6 +202,7 @@ const Game = () => {
       Swal.fire({
         title: "¡Estás quebrado! No puedes enviar dinero.",
         confirmButtonText: "Chale",
+        confirmButtonColor: "#71945B",
       });
       return;
     }
@@ -178,7 +213,7 @@ const Game = () => {
     <section className="section is-centered">
       <div className="container">
         <Logo />
-
+        <Spinner isLoading={isLoading} />
         <div style={{ visibility: isLoading ? "hidden" : "visible" }}>
           <PlayerGroup players={users} key="0" />
         </div>
@@ -186,13 +221,6 @@ const Game = () => {
           className="columns is-mobile is-half is-centered has-text-centered"
           style={{ visibility: isLoading ? "hidden" : "visible" }}
         >
-          <Button
-            action={() => {
-              localStorage.removeItem("user");
-              history.push("/monopoly-e-wallet/");
-            }}
-            text={<FontAwesomeIcon icon={faAirFreshener} />}
-          />
           <div className="column is-12">
             <div
               className="box is-size-1 has-text-black"
