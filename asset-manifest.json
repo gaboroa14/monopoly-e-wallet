@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/monopoly-e-wallet/static/css/main.b9fdd986.chunk.css",
-    "main.js": "/monopoly-e-wallet/static/js/main.48707b18.chunk.js",
-    "main.js.map": "/monopoly-e-wallet/static/js/main.48707b18.chunk.js.map",
+    "main.js": "/monopoly-e-wallet/static/js/main.e7cc8817.chunk.js",
+    "main.js.map": "/monopoly-e-wallet/static/js/main.e7cc8817.chunk.js.map",
     "runtime-main.js": "/monopoly-e-wallet/static/js/runtime-main.55d58d32.js",
     "runtime-main.js.map": "/monopoly-e-wallet/static/js/runtime-main.55d58d32.js.map",
     "static/css/2.3f6a4e7d.chunk.css": "/monopoly-e-wallet/static/css/2.3f6a4e7d.chunk.css",
-    "static/js/2.dee53c9f.chunk.js": "/monopoly-e-wallet/static/js/2.dee53c9f.chunk.js",
-    "static/js/2.dee53c9f.chunk.js.map": "/monopoly-e-wallet/static/js/2.dee53c9f.chunk.js.map",
+    "static/js/2.8e9742a4.chunk.js": "/monopoly-e-wallet/static/js/2.8e9742a4.chunk.js",
+    "static/js/2.8e9742a4.chunk.js.map": "/monopoly-e-wallet/static/js/2.8e9742a4.chunk.js.map",
     "index.html": "/monopoly-e-wallet/index.html",
     "service-worker.js": "/monopoly-e-wallet/service-worker.js",
     "service-worker.js.map": "/monopoly-e-wallet/service-worker.js.map",
     "static/css/2.3f6a4e7d.chunk.css.map": "/monopoly-e-wallet/static/css/2.3f6a4e7d.chunk.css.map",
     "static/css/main.b9fdd986.chunk.css.map": "/monopoly-e-wallet/static/css/main.b9fdd986.chunk.css.map",
-    "static/js/2.dee53c9f.chunk.js.LICENSE.txt": "/monopoly-e-wallet/static/js/2.dee53c9f.chunk.js.LICENSE.txt",
+    "static/js/2.8e9742a4.chunk.js.LICENSE.txt": "/monopoly-e-wallet/static/js/2.8e9742a4.chunk.js.LICENSE.txt",
     "static/media/app.css": "/monopoly-e-wallet/static/media/Monopoly Bold.de403097.ttf",
     "static/media/kuro.cbe4521a.png": "/monopoly-e-wallet/static/media/kuro.cbe4521a.png",
     "static/media/logo.35edb2b5.png": "/monopoly-e-wallet/static/media/logo.35edb2b5.png",
@@ -22,8 +22,8 @@
   "entrypoints": [
     "static/js/runtime-main.55d58d32.js",
     "static/css/2.3f6a4e7d.chunk.css",
-    "static/js/2.dee53c9f.chunk.js",
+    "static/js/2.8e9742a4.chunk.js",
     "static/css/main.b9fdd986.chunk.css",
-    "static/js/main.48707b18.chunk.js"
+    "static/js/main.e7cc8817.chunk.js"
   ]
 }
