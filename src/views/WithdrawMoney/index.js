@@ -53,10 +53,10 @@ const WithdrawMoney = () => {
     });
   }, []);
 
-  // ESCUCHAR LAS BANCARROTAS DE CARGA
+  // ESCUCHAR LAS BANCARROTAS
   useEffect(() => {
     socket.on("bankrupted", (person) => {
-      toast.error(`¡${person} ha quebrado!`);
+      toast.error(`¡${person.username} ha quebrado!`);
     });
   }, []);
 

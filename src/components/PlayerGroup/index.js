@@ -1,8 +1,6 @@
 import Player from "../Player";
 
 const PlayerGroup = ({ players, winner }) => {
-  console.log(players);
-
   return (
     <div>
       <div className="columns is-mobile is-centered has-text-centered mt-1 ">

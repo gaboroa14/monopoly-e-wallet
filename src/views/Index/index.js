@@ -159,10 +159,10 @@ const Index = () => {
             result.isDismissed &&
             JSON.parse(localStorage.getItem("user"))
           ) {
-            // socket.emit(
-            //   "delete-room",
-            //   JSON.parse(localStorage.getItem("user")).room._id
-            // );
+            socket.emit(
+              "delete-room",
+              JSON.parse(localStorage.getItem("user")).room._id
+            );
           }
         });
         Swal.showLoading(Swal.getDenyButton());
@@ -228,7 +228,7 @@ const Index = () => {
 
   return (
     <section
-      className="section is-centered has-background-danger"
+      className="section is-centered has-background-danger is-large is-fullheight"
       style={{ height: "100% !important" }}
     >
       <div className="container">
@@ -253,6 +253,11 @@ const Index = () => {
           />
         </div>
         <Footer />
+        <footer className="footer has-background-danger has-text-centered is-fullheight">
+          <p>
+          ©KURODev. 2021.
+          </p>
+        </footer>
       </div>
     </section>
   );

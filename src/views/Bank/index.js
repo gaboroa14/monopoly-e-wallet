@@ -55,10 +55,10 @@ const Bank = () => {
     });
   }, []);
 
-  // ESCUCHAR LAS BANCARROTAS DE CARGA
+  // ESCUCHAR LAS BANCARROTAS
   useEffect(() => {
     socket.on("bankrupted", (person) => {
-      toast.error(`¡${person} ha quebrado!`);
+      toast.error(`¡${person.username} ha quebrado!`);
     });
   }, []);
 
@@ -106,7 +106,6 @@ const Bank = () => {
   // ESCUCHAR LAS ACTUALIZACIONES EN LOS USUARIOS
   useEffect(() => {
     socket.on("users-list", (response) => {
-      console.log(response);
       response = response.map((item) => {
         return {
           username: item.username,
@@ -156,6 +155,7 @@ const Bank = () => {
           title: "Elija una opción.",
           showCloseButton: true,
           showCancelButton: true,
+          showDenyButton: true,
           denyButtonColor: "#B85B28",
           confirmButtonText: `Pagar`,
           denyButtonText: `Cobrar`,
@@ -191,7 +191,7 @@ const Bank = () => {
       showCancelButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        socket.emit("end-game", user.room._id, true);
+        socket.emit("end-game", {room_id: user.room._id, request: true}, () => {});
         Swal.fire({
           title: "Esperando confirmación.",
           showConfirmButton: false,

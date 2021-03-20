@@ -23,11 +23,28 @@ const SendMoney = () => {
     JSON.parse(localStorage.getItem("user"))
   );
 
+  const { user, bank } = useParams();
+
+  const [monto, setMonto] = useState("");
+  const [hasComma, setHasComma] = useState(false);
+  const [afterComma, setAfterComma] = useState(0);
+
   if (!myUser) history.push("/monopoly-e-wallet/");
 
   // CONEXIÓN CON EL BACKEND
+  // CONEXIÓN CON EL BACKEND
   useEffect(() => {
     socket = io(config.ENDPOINT);
+    const u = myUser;
+    socket.emit(
+      "join",
+      { username: u.username, room_id: u.room._id },
+      ({ error, user, quantity }) => {
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+      }
+    );
     return () => {
       //socket.emit("disconnect");
       socket.off();
@@ -48,35 +65,15 @@ const SendMoney = () => {
         }
         myUser.amount += res.amount;
         localStorage.setItem("user", JSON.stringify(myUser));
+        setMyUser(myUser);
       }
     });
-  }, []);
-
-  // CONEXIÓN CON EL BACKEND
-  useEffect(() => {
-    socket = io(config.ENDPOINT);
-    return () => {
-      //socket.emit("disconnect");
-      socket.off();
-    };
   }, []);
 
   // ESCUCHAR SI ALGUIEN GANÓ
   useEffect(() => {
     socket.on("winner-player", (response) => {
       history.push(`/monopoly-e-wallet/winner/${response.username}`);
-    });
-  }, []);
-
-  // ESCUCHAR LAS TRANSACCIONES DE CARGA
-  useEffect(() => {
-    socket.on("transaction", (res) => {
-      const myUser = JSON.parse(localStorage.getItem("user"));
-      if (res.to_user === myUser.username) {
-        toast.dark(`${res.username} te ha enviado ₩${res.amount}`);
-      }
-      myUser.amount += res.amount;
-      localStorage.setItem("user", JSON.stringify(myUser));
     });
   }, []);
 
@@ -92,10 +89,10 @@ const SendMoney = () => {
     });
   }, []);
 
-  // ESCUCHAR LAS BANCARROTAS DE CARGA
+  // ESCUCHAR LAS BANCARROTAS
   useEffect(() => {
     socket.on("bankrupted", (person) => {
-      toast.error(`¡${person} ha quebrado!`);
+      toast.error(`¡${person.username} ha quebrado!`);
     });
   }, []);
 
@@ -119,9 +116,13 @@ const SendMoney = () => {
         showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          socket.emit("end-game", user.room._id, true, (winner) => {
-            if (winner) history.push(`/monopoly-e-wallet/winner/${winner}`);
-          });
+          socket.emit(
+            "end-game",
+            { room_id: myUser.room._id, request: true },
+            (winner) => {
+              if (winner) history.push(`/monopoly-e-wallet/winner/${winner}`);
+            }
+          );
           Swal.fire({
             title: "Esperando confirmación.",
             showConfirmButton: false,
@@ -129,7 +130,11 @@ const SendMoney = () => {
           });
           Swal.showLoading();
         } else {
-          socket.emit("end-game", user.room._id, false);
+          socket.emit(
+            "end-game",
+            { room_id: myUser.room._id, request: false },
+            () => {}
+          );
         }
       });
     });
@@ -143,35 +148,6 @@ const SendMoney = () => {
     });
   }, []);
 
-  // ESCUCHAR SI EL BANQUERO QUIERE FINALIZAR LA PARTIDA
-  useEffect(() => {
-    socket.on("accepted-requests", (qty) => {
-      if (Swal.isVisible()) return;
-      Swal.fire({
-        title: `El banquero quiere finalizar la partida. ¿Finalizar?`,
-        confirmButtonColor: "#71945B",
-        confirmButtonText: "Sí",
-        cancelButtonColor: "#B85B28",
-        cancelButtonText: "No",
-        showCancelButton: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          socket.emit("end-game", user.room._id, true, (winner) => {
-            if (winner) history.push(`/monopoly-e-wallet/winner/${winner}`);
-          });
-          Swal.fire({
-            title: "Esperando confirmación.",
-            showConfirmButton: false,
-            showCancelButton: false,
-          });
-          Swal.showLoading();
-        } else {
-          socket.emit("end-game", user.room._id, false);
-        }
-      });
-    });
-  }, []);
-
   // ESCUCHAR SI RECHAZAN LA SOLICITUD DE FINALIZAR PARTIDA
   useEffect(() => {
     socket.on("reject-request", (qty) => {
@@ -179,12 +155,6 @@ const SendMoney = () => {
       toast.warn("¡Se ha rechazado la solicitud de finalizar la partida!");
     });
   }, []);
-
-  const { user, bank } = useParams();
-
-  const [monto, setMonto] = useState("");
-  const [hasComma, setHasComma] = useState(false);
-  const [afterComma, setAfterComma] = useState(0);
 
   const appendNumberToInput = (number) => {
     const nvo_monto = `${monto}${number}`;
@@ -319,10 +289,8 @@ const SendMoney = () => {
           </div>
           <div className="level-item">
             <div className="level-right">
-              <strong className="mr-2">
-                {bank ? `Saldo de ${user}:` : "Tu saldo es:"}
-              </strong>{" "}
-              ₩{myUser.amount}
+              <strong className="mr-2">{bank ? `` : "Tu saldo es:"}</strong>{" "}
+              {bank ? `` : `₩${myUser.amount}`}
             </div>
           </div>
         </div>

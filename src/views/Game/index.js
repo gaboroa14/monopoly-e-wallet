@@ -111,10 +111,10 @@ const Game = () => {
     });
   }, []);
 
-  // ESCUCHAR LAS BANCARROTAS DE CARGA
+  // ESCUCHAR LAS BANCARROTAS
   useEffect(() => {
     socket.on("bankrupted", (person) => {
-      toast.error(`¡${person} ha quebrado!`);
+      toast.error(`¡${person.username} ha quebrado!`);
     });
   }, []);
 
@@ -138,8 +138,8 @@ const Game = () => {
         showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          socket.emit("end-game", user.room._id, true, (winner) => {
-            if (winner) history.push(`/monopoly-e-wallet/winner/${winner}`);
+          socket.emit("end-game", {room_id: user.room._id, request: true}, (winner) => {
+            if (winner) history.push(`/monopoly-e-wallet/winner/${winner.username}`);
           });
           Swal.fire({
             title: "Esperando confirmación.",
@@ -148,7 +148,7 @@ const Game = () => {
           });
           Swal.showLoading();
         } else {
-          socket.emit("end-game", user.room._id, false);
+          socket.emit("end-game", {room_id: user.room._id, request: false}, () => {});
         }
       });
     });
@@ -165,7 +165,6 @@ const Game = () => {
   // ESCUCHAR LAS ACTUALIZACIONES EN LOS USUARIOS
   useEffect(() => {
     socket.on("users-list", (response) => {
-      console.log(response);
       setUser(response.find((item) => item._id == user._id));
       localStorage.setItem("user", JSON.stringify(user));
       response = response.map((item) => {
