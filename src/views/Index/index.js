@@ -179,7 +179,7 @@ const Index = () => {
         value: "ldkj",
       },
     }).then((result) => {
-      if (result.value.length !== 3) {
+      if (result.value.length !== 6) {
         Swal.fire({
           title: "Debe introducir un código válido",
           confirmButtonColor: "#71945B",
