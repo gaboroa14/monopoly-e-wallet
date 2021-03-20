@@ -25,6 +25,15 @@ const SendMoney = () => {
 
   if (!myUser) history.push("/monopoly-e-wallet/");
 
+  // CONEXIÓN CON EL BACKEND
+  useEffect(() => {
+    socket = io(config.ENDPOINT);
+    return () => {
+      //socket.emit("disconnect");
+      socket.off();
+    };
+  }, []);
+
   // ESCUCHAR LAS TRANSACCIONES
   useEffect(() => {
     socket.on("transaction", (res) => {

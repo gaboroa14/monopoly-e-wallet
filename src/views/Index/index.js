@@ -103,6 +103,7 @@ const Index = () => {
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#71945B",
       });
+      setIsLoading(false);
       return false;
     } else return true;
   };
@@ -115,54 +116,58 @@ const Index = () => {
 
     if (!validateField()) return;
 
-    socket.emit("create-room", playerName.toUpperCase(), ({ user, quantity, error }) => {
-      localStorage.setItem("user", JSON.stringify(user));
-      setIsLoading(false);
-      Swal.fire({
-        title: `El código de la sala es: ${user.room._id}`,
-        text: `Esperando jugadores. 1 persona se ha unido.`,
-        confirmButtonColor: "#71945B",
-        cancelButtonColor: "#B85B28",
-        confirmButtonText: "Comenzar",
-        cancelButtonText: "Cancelar",
-        showCancelButton: true,
-        showConfirmButton: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            title: "¿Está seguro que desea comenzar la partida?",
-            confirmButtonColor: "#71945B",
-            denyButtonColor: "#B85B28",
-            confirmButtonText: "Sí",
-            denyButtonText: "No",
-            showDenyButton: true,
-          }).then((result) => {
-            if (result.isConfirmed) {
-              socket.emit(
-                "begin-game",
-                JSON.parse(localStorage.getItem("user")).room._id,
-                (error) => {
-                  if (error)
-                    Swal.fire({
-                      title: `Error: ${error}`,
-                      icon: "warning",
-                    });
-                }
-              );
-            }
-          });
-        } else if (
-          result.isDismissed &&
-          JSON.parse(localStorage.getItem("user"))
-        ) {
-          // socket.emit(
-          //   "delete-room",
-          //   JSON.parse(localStorage.getItem("user")).room._id
-          // );
-        }
-      });
-      Swal.showLoading(Swal.getDenyButton());
-    });
+    socket.emit(
+      "create-room",
+      playerName.toUpperCase(),
+      ({ user, quantity, error }) => {
+        localStorage.setItem("user", JSON.stringify(user));
+        setIsLoading(false);
+        Swal.fire({
+          title: `El código de la sala es: ${user.room._id}`,
+          text: `Esperando jugadores. 1 persona se ha unido.`,
+          confirmButtonColor: "#71945B",
+          cancelButtonColor: "#B85B28",
+          confirmButtonText: "Comenzar",
+          cancelButtonText: "Cancelar",
+          showCancelButton: true,
+          showConfirmButton: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: "¿Está seguro que desea comenzar la partida?",
+              confirmButtonColor: "#71945B",
+              denyButtonColor: "#B85B28",
+              confirmButtonText: "Sí",
+              denyButtonText: "No",
+              showDenyButton: true,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                socket.emit(
+                  "begin-game",
+                  JSON.parse(localStorage.getItem("user")).room._id,
+                  (error) => {
+                    if (error)
+                      Swal.fire({
+                        title: `Error: ${error}`,
+                        icon: "warning",
+                      });
+                  }
+                );
+              }
+            });
+          } else if (
+            result.isDismissed &&
+            JSON.parse(localStorage.getItem("user"))
+          ) {
+            // socket.emit(
+            //   "delete-room",
+            //   JSON.parse(localStorage.getItem("user")).room._id
+            // );
+          }
+        });
+        Swal.showLoading(Swal.getDenyButton());
+      }
+    );
   };
 
   const handleJoinClick = () => {
@@ -186,6 +191,7 @@ const Index = () => {
           "join",
           { username: playerName.toUpperCase(), room_id: result.value },
           ({ error, user, quantity }) => {
+            setIsLoading(false);
             if (error) {
               Swal.fire({
                 title: `Error: ${error}`,
@@ -195,7 +201,7 @@ const Index = () => {
               });
               return;
             }
-            setIsLoading(false);
+
             localStorage.setItem("user", JSON.stringify(user));
             Swal.fire({
               title: `El código de la sala es: ${result.value.toUpperCase()}`,
@@ -227,7 +233,7 @@ const Index = () => {
     >
       <div className="container">
         <Logo mb="6" />
-        <Spinner isLoading={isLoading}/>
+        <Spinner isLoading={isLoading} />
         <PlayerName
           name={playerName}
           onTextChange={(e) => setPlayerName(e.target.value)}
